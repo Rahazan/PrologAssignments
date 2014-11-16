@@ -110,10 +110,6 @@ isStraightH(loc-1-1, loc-3-1).
 isStraightH(loc-1-2, loc-3-2).
 isStraightH(loc-1-3, loc-3-3).
 
-%hasKey(a, s0).
-%hasKey(b, s0).
-%hasKey(c, s0).
-
 box(a).
 box(b).
 box(c).
