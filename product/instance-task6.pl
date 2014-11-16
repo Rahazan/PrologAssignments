@@ -67,16 +67,15 @@ isStraightH(loc-1-2, loc-3-2).
 isStraightH(loc-1-3, loc-3-3).
 
 
-at(agent, loc-3-1,s0).
-at(a, loc-2-3,s0).
-at(c, loc-2-1,s0).
+at(agent, loc-1-4,s0).
+at(a, loc-1-3,s0).
+at(b, loc-2-2,s0).
 
 % --- Goal condition that the planner will try to reach ---------------
 
 goal(S) :-
-  at(a, loc-2-2, S),
-  at(agent, loc-3-3,S),
-  at(c, loc-3-1,S).
+  at(a, loc-1-4, S),
+  at(b, loc-3-2,S).
 
 
 
