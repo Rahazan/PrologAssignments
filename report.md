@@ -279,9 +279,17 @@ keyAt(c, loc-1-4).
 TODO! Work in progress
 
 ####Task 10: Sitcalc expressivity
+Using situation calculus had it's advantages. An advantage was the ease of planning. The black box that was `planner.pl` was usable after creating the domain and taskspecification. Extending the domain (with the keys) was very straightforward, it involved adding less than 10 lines of code and we got it right the first time.
+
+A big disadvantage of using situation calculus is the pain that is debugging. Now this may be because we are using Prolog here (instead of your run of the mill imperative or functional language), but in my experience of using STRIPS in Python it was a lot easier to find out where a mistake was made in the problem specification. 
+
+Using STRIPS one only has to define pre and post conditions for actions. Whereas in situation calculus one has to define every possible way a fluent can be true. Which is harder to get right in my experience.
+
 
 ####Task 11: Related work
+The paper we chose is a study by Al-Mouadhen et al.[1]. In this paper a framework is presented that integrates the planning of high-level robot actions with common-sense domain knowledge in a domestic environment. The high level actions are modelled in a novel way called the *Semantic Action Model (SAM)*. An algorithm then creates a planning domain from this model in PDDL format, which is fed to the planner. The authors note that any STRIPS-family planner could have been used instead of PDDL. 
 
+It is concluded that the use of a 'common-sense robot knowledge-base' makes the robot more flexible in completing its task.  
 
 ##Assignment 1-2 Consistency-based diagnosis
 
@@ -312,3 +320,7 @@ Hard to say, as hardly all the time spent sitting behind a computer is the time 
 *How long did it take you to finish it*
 
 *If you would have to change aspects of the assignment: what would they be and why?*
+
+##References
+
+ * [1] Ahmed Al-Moadhen, Renxi Qiu, Michael Packianather, Ze Ji, Rossi Setchi, *Integrating Robot Task Planner with Common-sense Knowledge Base to Improve the Efficiency of Planning*, Procedia Computer Science, Volume 22, 2013, Pages 211-220, ISSN 1877-0509.
