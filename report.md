@@ -276,8 +276,6 @@ keyAt(c, loc-1-4).
 
 ###Part 4: General Questions
 
-TODO! Work in progress
-
 ####Task 10: Sitcalc expressivity
 Using situation calculus had it's advantages. An advantage was the ease of planning. The black box that was `planner.pl` was usable after creating the domain and taskspecification. Extending the domain (with the keys) was very straightforward, it involved adding less than 10 lines of code and we got it right the first time.
 
