@@ -298,9 +298,20 @@ It is concluded that the use of a 'common-sense robot knowledge-base' makes the 
 
 ####Task 12: Generate conflict sets
 
-####Task 12: Define your data structure
+The conflict sets we found are; 
+problem1 {a1} and {a2}. 
+Problem2 {}
+Problem3 {a1,o1,a2}, {a2,o1}, {a1,01}
+Fulladder {a2,x2,x1}, {a2,rl,x1}, {a1,x1,x2}
 
-####Task 13: Implementation
+Working of tp/5; 
+
+The tp/5 has as input SD, COMP, OBS and HS. SD is the system description and is a list of logical formulas. COMP is the set of all components, OBS a set of all observations. HS is the set of all components that are assumed to be abnormal. The output is a conflict set CS. Tp/5 first computes which components are assumed to be normal, by subtracting the components in HS from the set of all components. With this new set it builds a theory and tests it. It tests the truth of the negated formula and collects the components of the proof. This set minus the HS and duplicates is returned as CS. 
+
+####Task 13: Define your data structure
+
+
+####Task 14: Implementation
 
 ##Reflection
 
