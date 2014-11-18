@@ -360,7 +360,11 @@ Hard to say, as hardly all the time spent sitting behind a computer is the time 
 ###Assignment 1-2
 *How long did it take you to finish it*
 
+We spend 2 'wercolleges' on this task, and besides that a good part of the weekend an the whole thuseday so that would be around 18 hours? Howerver it would have been a lot less if i didn't lose most of the code monday night. 
+
 *If you would have to change aspects of the assignment: what would they be and why?*
+
+Also for this part we would have liked some more of a build-up in the task. A good start dividing task 14 in some subtasks so there is some more structure. Also it was not easy to find out how to test the code before it was all finished. 
 
 ##References
 
