@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report KeR assignments</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h1 id="practical-assignments-series-1-report-bki312-2014-2015">Practical Assignments (Series 1) Report BKI312 (2014-2015)</h1>
+
+<hr>
+
+<p><em>Michel Meijerman and Guido Zuidhof</em> (s0723630 &amp; s4160703) <strong>Kunstmatige Intelligentie</strong></p>
+
+<p>November 2014</p>
+
+<hr>
+
+
+
+<h2 id="assignment-1-1-situation-calculus-and-planning">Assignment 1-1 Situation calculus and planning</h2>
+
+
+
+<h3 id="part-1-modelling-sokoban">Part 1: Modelling Sokoban</h3>
+
+
+
+<h4 id="task-1-knowledge-base">Task 1: Knowledge base</h4>
+
+<ul>
+<li><p><strong>Q1:</strong> By introducing a predicate for each of the directions. All connections would be specified as facts, such as <code>isCon(loc-1-1, loc-1-2)</code> or <code>isCon(loc-2-1, loc-1-1)</code>. Also straight connections are specified as predicates <code>isStraightH(loc-1-1, loc-1-3)</code>. <br>
+Aside from that we define helper functions <code>isConnected(a, b)</code> which returns whether a is connected to b, through any direction, and <code>isStraight(a,b)</code>, which returns whether two tiles are the same row or column.</p></li>
+<li><p><strong>Q2:</strong> We would introduce a predicate <code>at(X,Y,S)</code>, where X is the object (agent or a box), Y is the location, and S is the state. An example instantiation is <code>at(sokoban, loc-2-3, s0)</code>. Also a function <code>isFree(P,S)</code> which returns whether location P is empty in state S (not occupied by any object).</p></li>
+<li><strong>Q3:</strong> By defining facts of the positions of the objects, such as <code>at(sokoban, loc-1-2, s0)</code>, <code>at(a, loc-2-3, s0)</code>, <code>at(b, loc-2-2).at(c, loc-2-1, s0)</code>.</li>
+<li><strong>Q4:</strong> Similar to the initial state (Q3), but this time as a concatenation of the required facts, for example <code>at(a, loc-1-2, g)</code>, <code>at(b, loc-1-3, g)</code>,<code>at(c, loc-1-1, g)</code>, where g is the goal state.</li>
+</ul>
+
+
+
+<h4 id="task-2-actions">Task 2: Actions</h4>
+
+<ul>
+<li><strong>Q5:</strong></li>
+</ul>
+
+
+
+<pre class="prettyprint"><code class=" hljs vbnet">
+An <span class="hljs-built_in">object</span> can move <span class="hljs-keyword">if</span> it <span class="hljs-keyword">is</span> an agent, the tile it <span class="hljs-keyword">is</span> moving <span class="hljs-keyword">to</span> <span class="hljs-keyword">is</span> free <span class="hljs-keyword">and</span> connected.
+<span class="hljs-keyword">When</span> an <span class="hljs-built_in">object</span> <span class="hljs-keyword">is</span> moved, the original position becomes free, the <span class="hljs-built_in">object</span> <span class="hljs-keyword">is</span> no longer at the <span class="hljs-keyword">from</span> position.
+
+% Positive effect axiom <span class="hljs-keyword">of</span> move
+        a  = move(<span class="hljs-built_in">object</span>, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">to</span>)
+    -&gt; 
+        at(<span class="hljs-built_in">object</span>, <span class="hljs-keyword">do</span>(move(<span class="hljs-built_in">object</span>, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">to</span>),s))
+.
+
+
+
+% Negative effect axiom <span class="hljs-keyword">of</span> move
+        a = move(<span class="hljs-built_in">object</span>, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">to</span>)
+    -&gt; 
+        ¬at(<span class="hljs-built_in">object</span>, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">do</span>(a,s))
+
+.
+
+%Possibility axiom <span class="hljs-keyword">of</span> move
+        isAgent(<span class="hljs-built_in">object</span>)
+    /\
+        at(<span class="hljs-built_in">object</span>,<span class="hljs-keyword">from</span>,s)
+    /\
+        isConnected(<span class="hljs-keyword">from</span>,<span class="hljs-keyword">to</span>)
+    /\
+        isFree(<span class="hljs-keyword">to</span>, s)
+ -&gt;
+    Poss(move(<span class="hljs-built_in">object</span>, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">to</span>),s).
+
+
+
+</code></pre>
+
+<ul>
+<li><strong>Q6:</strong></li>
+</ul>
+
+
+
+<pre class="prettyprint"><code class=" hljs applescript">
+There <span class="hljs-keyword">is</span> a position agentpos, <span class="hljs-keyword">where</span> <span class="hljs-keyword">the</span> agent <span class="hljs-keyword">is</span>. The agent pushes an object, taking <span class="hljs-keyword">it</span>'s place, <span class="hljs-keyword">in</span> order
+<span class="hljs-keyword">for</span> this <span class="hljs-keyword">to</span> be valid <span class="hljs-keyword">the</span> object has <span class="hljs-keyword">to</span> be able <span class="hljs-keyword">to</span> move <span class="hljs-keyword">to</span> a position `<span class="hljs-keyword">to</span>`, <span class="hljs-keyword">from</span> <span class="hljs-keyword">from</span> <span class="hljs-keyword">in</span> a straigt line.
+So <span class="hljs-keyword">the</span> `<span class="hljs-keyword">to</span>` <span class="hljs-keyword">and</span> `agentpos` have <span class="hljs-keyword">to</span> be <span class="hljs-keyword">in</span> a straight line <span class="hljs-keyword">for</span> this <span class="hljs-keyword">to</span> happen. 
+
+After pushing `object` <span class="hljs-keyword">from</span> `<span class="hljs-keyword">from</span>` <span class="hljs-keyword">to</span> `<span class="hljs-keyword">to</span>` <span class="hljs-keyword">with</span> <span class="hljs-keyword">the</span> agent <span class="hljs-function_start"><span class="hljs-keyword">on</span></span> `agentpos`, <span class="hljs-keyword">the</span> object <span class="hljs-keyword">is</span> no longer <span class="hljs-keyword">at</span> <span class="hljs-keyword">from</span>, <span class="hljs-keyword">and</span> <span class="hljs-keyword">the</span> agent <span class="hljs-keyword">is</span> no longer <span class="hljs-keyword">at</span> agentpos.
+
+% Positive effect axiom <span class="hljs-keyword">of</span> push
+            a = push(agent, object, agentpos, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">to</span>)  
+    -&gt; 
+            <span class="hljs-keyword">at</span>(object, <span class="hljs-keyword">to</span> , do(a, s))
+        /\
+            <span class="hljs-keyword">at</span>(agent, <span class="hljs-keyword">from</span> , do(a, s))
+
+
+% Negative effect axiom <span class="hljs-keyword">of</span> push
+
+            a = push(agent, object, agentpos, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">to</span>)
+    -&gt;
+            ¬<span class="hljs-keyword">at</span>(object, <span class="hljs-keyword">from</span> , do(a, s))
+        /\
+            ¬<span class="hljs-keyword">at</span>(agent, agentpos , do(a, s))
+
+%Possibility axiom <span class="hljs-keyword">of</span> push
+                isAgent(agent)
+            /\
+                <span class="hljs-keyword">at</span>(object,<span class="hljs-keyword">from</span>,s)
+            /\
+                isConnected(<span class="hljs-keyword">from</span>,<span class="hljs-keyword">to</span>)
+            /\
+                isConnected(agentpos,<span class="hljs-keyword">from</span>)
+            /\
+                <span class="hljs-keyword">at</span>(agent, agentpos, s)
+            /\
+                isStraigt(agentpos, <span class="hljs-keyword">to</span>)
+            /\
+                isFree(<span class="hljs-keyword">to</span>, s)
+        -&gt;
+            Poss(push(agent,object, agentpos, <span class="hljs-keyword">from</span>, <span class="hljs-keyword">to</span>),s).</code></pre>
+
+<ul>
+<li><strong>Q7:</strong> </li>
+</ul>
+
+
+
+<pre class="prettyprint"><code class="language-prolog hljs ocaml">
+%Succesor-state axiom <span class="hljs-keyword">of</span> at
+
+at(<span class="hljs-keyword">object</span>, loc, <span class="hljs-keyword">do</span>(a,s)) ≡ 
+        at(<span class="hljs-keyword">object</span>, loc, s)
+    /\ 
+        (
+                %Object moved away
+                ¬∃<span class="hljs-keyword">to</span>{a = move(<span class="hljs-keyword">object</span>, loc, <span class="hljs-keyword">to</span>)}
+            /\
+                %Something pushed <span class="hljs-keyword">object</span> away
+                ¬∃<span class="hljs-keyword">to</span>{a = push(_, <span class="hljs-keyword">object</span>, _, loc, _)} 
+            /\
+                %Object pushed something, moving the <span class="hljs-keyword">object</span> too
+                ¬∃from{a = push(<span class="hljs-keyword">object</span>, _, Loc, _, _)} 
+        )
+\/
+    ∃prev{a = move(<span class="hljs-keyword">object</span>, prev, loc)} %<span class="hljs-keyword">object</span> moved <span class="hljs-keyword">to</span> loc
+\/ 
+    ∃prev{a = push(_, <span class="hljs-keyword">object</span>, _, prev, loc)} %<span class="hljs-keyword">object</span> got pushed <span class="hljs-keyword">to</span> loc
+\/ 
+    ∃<span class="hljs-keyword">to</span>{a = push(<span class="hljs-keyword">object</span>,_ , _, loc, <span class="hljs-keyword">to</span>)} %<span class="hljs-keyword">object</span> pushed something off loc
+.</code></pre>
+
+
+
+<h3 id="part-2-implementation">Part 2: Implementation</h3>
+
+
+
+<h4 id="task-3-translate-axioms">Task 3: Translate axioms</h4>
+
+<p>Translating the model of Sokoban proved to be quite challenging. Translating from ‘logic’ to prolog wasn’t all that hard, but in the model we overlooked many things required for correct planning. Often the agent would make moves that were not valid. Note that we have corrected the previous part of this assignment so that it matches the implementation. See <code>domain-task3.pl</code> for the implementation of the domain.</p>
+
+
+
+<h4 id="task-4-the-planning-problem-in-figure-1">Task 4: The Planning Problem in Figure 1</h4>
+
+<p>Implementing the problem in figure one was pretty straightforward. It was just a matter of listing the facts that make up the world and adding some helper functions.</p>
+
+<p>Excerpts from this task specification:</p>
+
+<p><strong>Agent declaration</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">isAgent</span><span class="hljs-params">(agent)</span>.</span></code></pre>
+
+<p><strong>World structure declaration</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">isCon</span><span class="hljs-params">(loc-<span class="hljs-number">1</span>-<span class="hljs-number">1</span>, loc-<span class="hljs-number">2</span>-<span class="hljs-number">1</span>)</span>.
+<span class="hljs-title">isCon</span><span class="hljs-params">(loc-<span class="hljs-number">2</span>-<span class="hljs-number">1</span>, loc-<span class="hljs-number">3</span>-<span class="hljs-number">1</span>)</span>.
+. . .
+<span class="hljs-title">isCon</span><span class="hljs-params">(loc-<span class="hljs-number">3</span>-<span class="hljs-number">2</span>, loc-<span class="hljs-number">3</span>-<span class="hljs-number">3</span>)</span>.
+
+<span class="hljs-title">isStraightH</span><span class="hljs-params">(loc-<span class="hljs-number">1</span>-<span class="hljs-number">1</span>, loc-<span class="hljs-number">1</span>-<span class="hljs-number">3</span>)</span>.
+<span class="hljs-title">isStraightH</span><span class="hljs-params">(loc-<span class="hljs-number">2</span>-<span class="hljs-number">1</span>, loc-<span class="hljs-number">2</span>-<span class="hljs-number">3</span>)</span>.
+. . .
+<span class="hljs-title">isStraightH</span><span class="hljs-params">(loc-<span class="hljs-number">1</span>-<span class="hljs-number">3</span>, loc-<span class="hljs-number">3</span>-<span class="hljs-number">3</span>)</span>.</span></code></pre>
+
+<p><strong>Helper functions</strong></p>
+
+<p><em>If A is connected to B, B is also connected to A</em></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs scss"><span class="hljs-function">isConnected(A,B)</span> <span class="hljs-value">:-
+    isCon(A,B);</span>
+    <span class="hljs-function">isCon(B,A)</span>.</code></pre>
+
+<p><em>A is straight to B (same collumn or row)</em></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs autohotkey"><span class="hljs-label">isStraight(A,B) :</span>-
+    isStraightH(<span class="hljs-literal">A</span>,B)<span class="hljs-comment">; %Straight connections go both ways</span>
+    isStraightH(B,<span class="hljs-literal">A</span>)<span class="hljs-comment">; </span>
+    isConnected(<span class="hljs-literal">A</span>,B). <span class="hljs-var_expand">%When direcly connected it's always straight</span></code></pre>
+
+<p><em>Position P is free if nothing is at it</em></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs ruby">isFree(<span class="hljs-constant">P</span>, <span class="hljs-constant">S</span>) <span class="hljs-symbol">:-</span>
+  <span class="hljs-keyword">not</span>(at(<span class="hljs-number">_</span>,<span class="hljs-constant">P</span>,<span class="hljs-constant">S</span>)).</code></pre>
+
+<p><strong>Starting state declaration</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs livecodeserver"><span class="hljs-keyword">at</span>(agent, loc-<span class="hljs-number">2</span>-<span class="hljs-number">4</span>,s0).
+<span class="hljs-keyword">at</span>(<span class="hljs-operator">a</span>, loc-<span class="hljs-number">2</span>-<span class="hljs-number">3</span>,s0).
+<span class="hljs-keyword">at</span>(b, loc-<span class="hljs-number">2</span>-<span class="hljs-number">2</span>,s0).
+<span class="hljs-keyword">at</span>(c, loc-<span class="hljs-number">1</span>-<span class="hljs-number">2</span>,s0).</code></pre>
+
+<p><strong>Goal state declaration</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs livecodeserver">goal(S) :-
+  <span class="hljs-keyword">at</span>(<span class="hljs-operator">a</span>, loc-<span class="hljs-number">3</span>-<span class="hljs-number">3</span>,S),
+  <span class="hljs-keyword">at</span>(b, loc-<span class="hljs-number">3</span>-<span class="hljs-number">2</span>,S),
+  <span class="hljs-keyword">at</span>(c, loc-<span class="hljs-number">1</span>-<span class="hljs-number">1</span>,S).</code></pre>
+
+
+
+<h4 id="task-5-crates-go-to-any-goal-location">Task 5: Crates go to Any Goal Location</h4>
+
+<p>This was an easy change. <br>
+We added 3 facts, declaring the a, b, and c as boxes.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">box</span><span class="hljs-params">(a)</span>.
+<span class="hljs-title">box</span><span class="hljs-params">(b)</span>.
+<span class="hljs-title">box</span><span class="hljs-params">(c)</span>.</span></code></pre>
+
+<p>Then in the goal state we want <code>Q</code>, <code>R</code> and <code>T</code>, which should be boxes, to be at the goal locations.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs scss">  <span class="hljs-function">at(Q, loc-<span class="hljs-number">1</span>-<span class="hljs-number">2</span>, S)</span>, <span class="hljs-function">box(Q)</span>,
+  <span class="hljs-function">at(R, loc-<span class="hljs-number">1</span>-<span class="hljs-number">3</span>,S)</span>, <span class="hljs-function">box(R)</span>,
+  <span class="hljs-function">at(T, loc-<span class="hljs-number">1</span>-<span class="hljs-number">1</span>,S)</span>, <span class="hljs-function">box(T)</span>.</code></pre>
+
+
+
+<h4 id="task-6-inverse-problem">Task 6: Inverse Problem</h4>
+
+<p>A nice puzzle. In the end this problem satisfied the conditions</p>
+
+<p><strong>Starting state</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs livecodeserver"><span class="hljs-keyword">at</span>(agent, loc-<span class="hljs-number">1</span>-<span class="hljs-number">4</span>,s0).
+<span class="hljs-keyword">at</span>(<span class="hljs-operator">a</span>, loc-<span class="hljs-number">1</span>-<span class="hljs-number">3</span>,s0).
+<span class="hljs-keyword">at</span>(b, loc-<span class="hljs-number">2</span>-<span class="hljs-number">2</span>,s0).</code></pre>
+
+<p><strong>Goal state</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs livecodeserver">goal(S) :-
+  <span class="hljs-keyword">at</span>(<span class="hljs-operator">a</span>, loc-<span class="hljs-number">1</span>-<span class="hljs-number">4</span>, S),
+  <span class="hljs-keyword">at</span>(b, loc-<span class="hljs-number">3</span>-<span class="hljs-number">2</span>,S).</code></pre>
+
+<p><strong>Artistic MS Paint impression</strong></p>
+
+<p><img src="http://puu.sh/cT6yC/5a75aa17eb.png" alt="Artistic impression" title=""></p>
+
+<p>The agent has to move all the way around B to push it A. After that it only has to push B to have visited the last spot.</p>
+
+
+
+<h3 id="part-3-extending-the-domain">Part 3: Extending the domain</h3>
+
+
+
+<h4 id="task-7-unlocking-the-crates">Task 7: Unlocking the Crates</h4>
+
+<p>Thanks to our sane code (without any dynamic programming optimizations required) this was easy to add. </p>
+
+<p>Changes to the existing domain from previous tasks:</p>
+
+<p><strong>New fluent <code>hasKey</code> introduced</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs vbnet">hasKey(<span class="hljs-keyword">Key</span>, result(A,S)) :-
+    %Already has the <span class="hljs-keyword">key</span>
+    hasKey(<span class="hljs-keyword">Key</span>, S) 
+;
+    %<span class="hljs-keyword">Key</span> was picked up
+    A = pickup(_, <span class="hljs-keyword">Key</span>)
+.   </code></pre>
+
+<p><strong>Possibility axiom of push updated</strong></p>
+
+<p><code>hasKey(Object, S)</code> was added to the possibility axiom of push, so in order to push an object a key for it is required.</p>
+
+<p><strong>Possibility axiom of new pickup action added</strong></p>
+
+<p>In hindsight a possible optimization might be checking whether the key has not already been picked up.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs vbnet">poss(pickup(Agent, <span class="hljs-keyword">Key</span>), S):-
+  isAgent(Agent),
+  keyAt(<span class="hljs-keyword">Key</span>, Pos),
+  at(Agent, Pos, S).</code></pre>
+
+<p><strong>Changes to task description</strong></p>
+
+<p>Besides updating the positions of the agent and the boxes, the location of the keys had to be specified</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">keyAt</span><span class="hljs-params">(a, loc-<span class="hljs-number">2</span>-<span class="hljs-number">1</span>)</span>.
+<span class="hljs-title">keyAt</span><span class="hljs-params">(b, loc-<span class="hljs-number">1</span>-<span class="hljs-number">3</span>)</span>.
+<span class="hljs-title">keyAt</span><span class="hljs-params">(c, loc-<span class="hljs-number">1</span>-<span class="hljs-number">4</span>)</span>.</span></code></pre>
+
+
+
+<h3 id="part-4-general-questions">Part 4: General Questions</h3>
+
+
+
+<h4 id="task-10-sitcalc-expressivity">Task 10: Sitcalc expressivity</h4>
+
+<p>Using situation calculus had it’s advantages. An advantage was the ease of planning. The black box that was <code>planner.pl</code> was usable after creating the domain and taskspecification. Extending the domain (with the keys) was very straightforward, it involved adding less than 10 lines of code and we got it right the first time.</p>
+
+<p>A big disadvantage of using situation calculus is the pain that is debugging. Now this may be because we are using Prolog here (instead of your run-of-the-mill imperative or functional language), but in my experience of using STRIPS in Python it was a lot easier to find out where a mistake was made in the problem specification. </p>
+
+<p>Using STRIPS one only has to define pre and post conditions for actions. Whereas in situation calculus one has to define every possible way a fluent can be true. Which is harder to get right in my experience.</p>
+
+
+
+<h4 id="task-11-related-work">Task 11: Related work</h4>
+
+<p>The paper we chose is a study by Al-Mouadhen et al.[1]. In this paper a framework is presented that integrates the planning of high-level robot actions with common-sense domain knowledge in a domestic environment. The high level actions are modelled in a novel way called the <em>Semantic Action Model (SAM)</em>. An algorithm then creates a planning domain from this model in PDDL format, which is fed to the planner. The authors note that any STRIPS-family planner could have been used instead of PDDL. </p>
+
+<p>It is concluded that the use of a ‘common-sense robot knowledge-base’ makes the robot more flexible in completing its task.  </p>
+
+
+
+<h2 id="assignment-1-2-consistency-based-diagnosis">Assignment 1-2 Consistency-based diagnosis</h2>
+
+<p><strong>Exercises</strong></p>
+
+
+
+<pre class="prettyprint"><code class=" hljs mathematica">isBinaryTree(X):-
+    isLeaf(X);
+    isBinaryNode(X).
+
+
+isBinaryNode(X):-
+    X=node((Y,Z),(<span class="hljs-keyword">Number</span>) ),
+    isBinaryTree(Y),
+    isBinaryTree(Z).
+
+isLeaf(leaf(<span class="hljs-keyword">Number</span>)).
+
+nnodesBinary(Tree, <span class="hljs-keyword">N</span>):-
+    isLeaf(Tree), <span class="hljs-keyword">N</span>=<span class="hljs-number">1</span>;
+    Tree = node(X,Y),
+    nnodes(X,M), nnodes(Y,L),<span class="hljs-keyword">N</span> is <span class="hljs-number">1</span>+M+L.
+
+makeBinary(<span class="hljs-keyword">N</span>,Tree):-
+    <span class="hljs-keyword">N</span>=<span class="hljs-number">0</span>, Tree = leaf(<span class="hljs-number">0</span>);
+    <span class="hljs-keyword">N</span>&gt;<span class="hljs-number">0</span>, N1 is <span class="hljs-keyword">N</span>-<span class="hljs-number">1</span>, Tree = node( (makeBinary(N1,  T), makeBinary(N1, T)),<span class="hljs-keyword">N</span>).
+
+isTree(node(X,Y)):-
+    isNode(X).
+
+isNode(X):-
+    X=[];
+    X=[H|T], isTree(H), isNode(T).
+
+nnodes(node(Tree,_),<span class="hljs-keyword">N</span>):- nnodes(Tree,N1), <span class="hljs-keyword">N</span> is N1 + <span class="hljs-number">1.</span>
+nnodes([],<span class="hljs-number">0</span>).
+nnodes([H|T],<span class="hljs-keyword">N</span>):-
+nnodes(H,N1),nnodes(T,N2), <span class="hljs-keyword">N</span> is N1 + N2.</code></pre>
+
+
+
+<h3 id="implementation-of-the-hitting-set-algorithm">Implementation of the hitting-set algorithm</h3>
+
+
+
+<h4 id="task-12-generate-conflict-sets">Task 12: Generate conflict sets</h4>
+
+<p>The conflict sets we found are: </p>
+
+<p>Problem1 <code>{a1}</code> and <code>{a2}</code>.  <br>
+Problem2 <code>{}</code> <br>
+Problem3 <code>{a1,o1,a2}</code>, <code>{a2,o1}</code>, <code>{a1,01}</code> <br>
+Fulladder <code>{a2,x2,x1}</code>, <code>{a2,rl,x1}</code>, <code>{a1,x1,x2}</code></p>
+
+<p><strong>Working of <code>tp/5</code></strong></p>
+
+<p>The theorem prover <code>tp/5</code> has as input <code>SD</code>, <code>COMP</code>, <code>OBS</code> and <code>HS</code>. SD is the system description and is a list of logical formulas. <code>COMP</code> is the set of all components, <code>OBS</code> a set of all observations. <code>HS</code> is the set of all components that are assumed to be abnormal. The output is a conflict set <code>CS</code>. </p>
+
+<p><code>tp/5</code> first computes which components are assumed to be normal, by subtracting the components in <code>HS</code> from the set of all components. With this new set it builds a theory and tests it. It tests the truth of the negated formula and collects the components of the proof. This set minus the <code>HS</code> and duplicates is returned as <code>CS</code>. </p>
+
+
+
+<h4 id="task-13-define-your-data-structure">Task 13: Define your data structure</h4>
+
+<p>All requirements are met by this data structure <code>isHittingTreeSet/1</code>.</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs makefile">isHittingSetTree(Tree):-
+<span class="hljs-constant">Tree</span> = node([],_);
+<span class="hljs-constant">Tree</span> = node([X],_), isHittingSetTree(X);
+<span class="hljs-constant">Tree</span> = node([H|T],_), isHittingSetTree(H), isHittingSetTree(T).</code></pre>
+
+
+
+<h4 id="task-14-implementation">Task 14: Implementation</h4>
+
+
+
+<pre class="prettyprint"><code class="language-prolog hljs livecodeserver">diagnoses(SD,OBS,COMPS,D):- hittingTree(SD,OBS,COMPS,[],CS),paths(CS,D).
+
+conflictSet(SD,OBS,COMPS,HS,CS):- tp(SD,OBS,COMPS,HS,CS). %<span class="hljs-built_in">get</span> <span class="hljs-operator">an</span> conflictset CS <span class="hljs-operator">with</span> help <span class="hljs-operator">of</span> <span class="hljs-operator">the</span> tp funtion. 
+
+hittingTree(SD,OBS,COMPS,HS,Node):-
+    %<span class="hljs-keyword">if</span> no conflictset is found, make <span class="hljs-operator">an</span> <span class="hljs-constant">empty</span> node (leaf). 
+    <span class="hljs-operator">not</span>(conflictSet(SD,OBS,COMPS,HS,CS)), Node = node([],[]); 
+    %make <span class="hljs-operator">a</span> note <span class="hljs-operator">with</span> label CS <span class="hljs-operator">and</span> find its children. 
+    conflictSet(SD,OBS,COMPS,HS,CS),
+        CS = [H|T], hittingTree2([H|T], SD,OBS,COMPS,HS,Children), Node = node(Children, CS).
+
+%use recursion <span class="hljs-built_in">to</span> find all children <span class="hljs-operator">of</span> <span class="hljs-operator">a</span> node. 
+hittingTree2([X|XS],SD,OBS,COMPS,HS,Children) :-
+    hittingTree(SD,OBS,COMPS,[X|HS],Child),
+    hittingTree2(XS,SD,OBS,COMPS,HS,T), Children = [Child|T].
+hittingTree2([],SD,OBS,COMPS,HS,Children) :- Children = [].
+
+%find <span class="hljs-operator">the</span> paths = diagnoses. 
+paths(node([],Path), Path).
+paths(node([H],X), [X|P]) :- paths(H,P).
+paths(node([H|T],X),[X|P]):- paths(H,P).</code></pre>
+
+<p><strong>Querying</strong> <br>
+This code can be queried by first loading the problem domain, and then calling (for problem 1)</p>
+
+
+
+<pre class="prettyprint"><code class=" hljs erlang"><span class="hljs-function"><span class="hljs-title">problem1</span><span class="hljs-params">(<span class="hljs-variable">SD</span>,<span class="hljs-variable">OBS</span>,<span class="hljs-variable">COMPS</span>)</span>, <span class="hljs-title">diagnoses</span><span class="hljs-params">(<span class="hljs-variable">SD</span>,<span class="hljs-variable">OBS</span>,<span class="hljs-variable">COMPS</span>,<span class="hljs-variable">D</span>)</span>.</span></code></pre>
+
+<p><strong>Found diagnoses</strong></p>
+
+<p><code>D = {a1}, {a2}</code> for problem1 <br>
+<code>D = {a1,a2}</code> for problem2 <br>
+<code>D = {a1, o1, a2}, {a2, o1}</code> for problem3 <br>
+<code>D = {a1, x1, a2, r1, x2}, {a2, x2, x1}, {x1, x2}</code> for the fulladder. </p>
+
+<p>These are all correct diagnoses, they are however not all minimal diagnoses. An improvement to our program would be to filter the non minimal diagnoses  (those which are a subset of other diagnoses).  We decided to keep it simple, but pruning the hitting set tree would increase it’s execution speed. But given that it already was pretty fast and HS trees in general make for a quick enumeration of hitting sets, this would add unnecessary complexity.</p>
+
+<h2 id="reflection">Reflection</h2>
+
+
+
+<h3 id="assignment-1-1">Assignment 1-1</h3>
+
+<p><em>How long did it take you to finish it</em></p>
+
+<p>Hard to say, as hardly all the time spent sitting behind a computer is the time working at it. Does time thinking about it in the shower count? Anyway, we spent some 3 ‘werkcolleges’, and besides that another 8 hours on this assignment, of which 1 and a half hour on polishing the report and putting the code in the required structure to be handed in.</p>
+
+<p><em>If you would have to change aspects of the assignment: what would they be and why?</em></p>
+
+<ul>
+<li>Not as rigid code hand-in requirements. We had one <code>sokoban#.pl</code> file per task, which was around 100 lines long. Splitting this into the required <code>instance-task#.pl</code> and <code>domain-task#.pl</code> didn’t make much sense.</li>
+<li>More of a build-up in the task. Sokoban isn’t the easiest problem, as it involves a <code>push</code> task which changes the position of multiple entities. Perhaps it could start with a task where the goal is  simply pathfinding, and work from there. </li>
+</ul>
+
+<h3 id="assignment-1-2">Assignment 1-2</h3>
+
+<p><em>How long did it take you to finish it</em></p>
+
+<p>We spent 2 ‘werkcolleges’ on this task, and besides that a good part of the weekend and the whole tuesday so that would be around 18 hours? However it would have been a lot less if we didn’t lose most of the code for the second part monday night. </p>
+
+<p><em>If you would have to change aspects of the assignment: what would they be and why?</em></p>
+
+<p>Also for this part we would have liked some more of a build-up in the task. A good start would be dividing task 14 in some subtasks so there is some more structure. Also it was not easy to find out how to test the code before it was all finished. </p>
+
+<h2 id="references">References</h2>
+
+<ul>
+<li>[1] Ahmed Al-Moadhen, Renxi Qiu, Michael Packianather, Ze Ji, Rossi Setchi, <em>Integrating Robot Task Planner with Common-sense Knowledge Base to Improve the Efficiency of Planning</em>, Procedia Computer Science, Volume 22, 2013, Pages 211-220, ISSN 1877-0509.</li>
+</ul></div></body>
+</html>
