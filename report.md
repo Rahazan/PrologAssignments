@@ -1,6 +1,6 @@
 #Practical Assignments (Series 1) Report BKI312 (2014-2015)
 ----
-*Michel Meijerman and Guido Zuidhof* (sXXXXXXX & s4160703) **Kunstmatige Intelligentie**
+*Michel Meijerman and Guido Zuidhof* (s0723630 & s4160703) **Kunstmatige Intelligentie**
 
 November 2014
 
@@ -312,6 +312,38 @@ The tp/5 has as input SD, COMP, OBS and HS. SD is the system description and is 
 
 
 ####Task 14: Implementation
+
+```
+%example query: problem1(SD,OBS,COMPS),diagnoses(SD,OBS,COMPS,D).
+diagnoses(SD,OBS,COMPS,D):- hittingTree(SD,OBS,COMPS,[],CS),paths(CS,D).
+
+conflictSet(SD,OBS,COMPS,HS,CS):- tp(SD,OBS,COMPS,HS,CS). %get an conflictset CS with help of the tp funtion. 
+
+hittingTree(SD,OBS,COMPS,HS,Node):-
+	not(conflictSet(SD,OBS,COMPS,HS,CS)), Node = node([],[]); %if no conflictset is found, make an empty node (leaf). 
+	conflictSet(SD,OBS,COMPS,HS,CS),
+        CS = [H|T], hittingTree2([H|T], SD,OBS,COMPS,HS,Children), Node = node(Children, CS).%make a note with label CS and find its children. 
+
+%use recursion to find all children of a node. 
+hittingTree2([X|XS],SD,OBS,COMPS,HS,Children) :-
+	hittingTree(SD,OBS,COMPS,[X|HS],Child),
+	hittingTree2(XS,SD,OBS,COMPS,HS,T), Children = [Child|T].
+hittingTree2([],SD,OBS,COMPS,HS,Children) :- Children = [].
+
+%find the paths = diagnoses. 
+paths(node([],Path), Path).
+paths(node([H],X), [X|P]) :- paths(H,P).
+paths(node([H|T],X),[X|P]):- paths(H,P).
+```
+
+The diagnoses found are
+
+D = {a1}, {a2} for problem1
+D = {a1,a2} for problem2
+D = {a1, o1, a2}, {a2, o1} for problem3
+D = {a1, x1, a2, r1, x2}, {a2, x2, x1}, {x1, x2} for the fulladder. 
+These are all correct diagnoses, they are however not all minimal diagnoses. An improvement to our program would be to filter the non minimal diagnoses. 
+
 
 ##Reflection
 
