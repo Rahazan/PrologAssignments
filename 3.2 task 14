@@ -16,3 +16,7 @@ hittingTree2([X|XS],SD,OBS,COMPS,HS,Children) :-
 	hittingTree2(XS,SD,OBS,COMPS,HS,T), Children = [Child|T].
 hittingTree2([],SD,OBS,COMPS,HS,Children) :- Children = [].
 
+paths(node([],Path), Path).
+paths(node([H],X), [X|P]) :- paths(H,P).
+paths(node([H|T],X),[X|P]):- paths(H,P).
+
