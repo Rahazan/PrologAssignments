@@ -1,0 +1,16 @@
+assumable a1.
+assumable a2.
+assumable fever.
+assumable flu.
+assumable sport.
+
+chills  <- fever & a1.
+fever   <- flu.
+thirst  <- fever.
+myalgia <- flu & a2.
+myalgia <- sport.
+
+false <- chills.
+create_nogoods.
+
+

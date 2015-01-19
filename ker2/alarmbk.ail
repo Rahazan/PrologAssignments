@@ -1,0 +1,165 @@
+prob earthquake: 1/(365.25*10).
+prob burglar: 1/(365.25*10).
+
+% P(Radio Reports Earthquake | Earthquake)
+radio <- earthquake & radioWhenEarthquake.
+prob radioWhenEarthquake: 4999/5000.
+
+radio <- ~earthquake & radioWhenNoEarthquake.
+prob radioWhenNoEarthquake: 1/5000.
+
+
+% P (Intermediate1 | Earthquake)
+i1 <- earthquake & intermediate1WhenEQ.
+prob intermediate1WhenEQ: 0.2.
+
+i1 <- ~earthquake & intermediate1WhenNoEQ.
+prob intermediate1WhenNoEQ: 0.
+
+% P (Intermediate2 | Burglar)
+i2 <- burglar & intermediate2WhenBurglar.
+prob intermediate2WhenBurglar: 0.95.
+
+i2 <- ~burglar & intermediate2WhenNoBurglar.
+prob intermediate2WhenNoBurglar: 0.
+
+% P(Alarm | Intermediate1, Intermediate2)
+alarm <- i1 & i2 & both.
+prob both: 1.
+alarm <- i1 & ~i2 & only1.
+prob only1: 1.
+alarm <- ~i1 & i2 & only2.
+prob only2: 1.
+alarm <- ~i1 & ~i2 & neither.
+prob neither: 0.
+
+% P(Watson | Alarm)
+watson <- alarm & watsonWhenAlarm.
+prob watsonWhenAlarm: 0.8.
+watson <- ~alarm & watsonWhenNoAlarm.
+prob watsonWhenNoAlarm: 0.4.
+
+% P(Gibbons | Alarm)
+gibbons <- alarm & gibbonsWhenAlarm.
+prob gibbonsWhenAlarm: 0.99.
+gibbons <- ~alarm & gibbonsWhenNoAlarm.
+prob gibbonsWhenNoAlarm: 0.04.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+needs(joe, []).
+needs(william, []).
+needs(jack, [joe]).
+needs(averall, [jack, william]).
+
+prob joe:5/7.
+prob william:5/7.
+prob jack:5/7.
+prob averall:5/7.
+
+burglar(joe).
+burglar(william).
+burglar(jack).
+burglar(averall).
+
+
+
+% Burglars will only go when the group contains 2 or
+% more burglars.
+enoughBurglars(X) <-
+  X > 1
+.
+
+
+% Who are going, given the list of people going (So from list
+% one, those elements for whom the requirements are in Going)
+whoIsGoing([], Going, Result).
+whoIsGoing([X|XS], Going, Result) <-
+   burglar(X) &
+   hasBuddies(X, Going) &
+   whoIsGoing(XS, Going, [X|Result])
+.
+
+whoIsGoing([X|XS], Going, Result) <-
+   burglar(X) &
+   ~hasBuddies(X, Going) &
+   whoIsGoing(XS, Going, Result)
+
+.
+
+
+
+
+% All required burglars go for burglar X
+hasBuddies(Burglar, Going) <-
+  needs(Burglar, Required) &
+  allGoing(Required, Going)
+.
+
+% All burglars in list are going
+% defined inductively.
+allGoing([], Going).
+allGoing([X|XS], Going) <-
+  member(X, Going) &
+  allGoing(XS)
+.
+
+maybeGoing([joe, william, jack, averall]).
+
+burglarsAreGoing <-
+  maybeGoing(MaybeGoing) &
+  whoIsGoing(MaybeGoing, MaybeGoing, Going) &
+  whoIsGoing(Going, Going, DefGoing) &
+  length(DefGoing, X) &
+  enoughBurglars(X)
+.
+
+
+
+
+% MaybeGoing
+% a list of burglars who consider going (5 in 7 odds, true).
+
+% Going
+% a subset of MaybeGoing, for whom the required colleagues
+% are in maybeGoing
+
+% DefGoing
+% a subset of going, for whom the required colleagues
+% are in going.
+
+% The DefGoing list is necessary, as the burglars who are going
+% require people, and even if they are considering going,
+% those people may not go because their requirements are
+% not met.
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+oddsOfBurglarAtMyHouse <-
+  ( burglarsAreGoing
+  -> prob burglar 3/100000
+  ; prob burglar 0
+  )
+.
+*/
+
+/*
+% AmountOfBurglarsGoing
+amountGoing([], CountSoFar).
+amountGoing([X|XS], CountSoFar) <-
+  (  hasBuddies(X)
+  -> amountGoing(XS, CountSoFar+1)
+  ;  amountGoing(XS, CountSoFar)
+  )
+.
+*/

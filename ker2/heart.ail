@@ -1,0 +1,141 @@
+% Subset of the knowledge base put together by a cardiologist
+% of AMC Amsterdam for the 112 alarm service.
+% Idea was that centralists (people answering the phone) should
+% be given assistance in posing the right questions to people
+% calling 112 for cardiac problems. In some cases, when there
+% was an emergency, an ambulance needs to be send, where in
+% others it would save money to send the person to general care.
+% So the essential question is: is there an emergency situation
+% or not.
+
+askable age(Patient) = V.
+askable duration(Patient,heart,pain) = V.
+askable diabetic(Patient).
+askable smoking(Patient).
+askable pain(Patient).
+askable similar_symptoms(Patient,angina_pectoris).
+askable similar_symptoms(Patient,myocardial_infarction).
+askable pattern(Patient,pain,retrosternal).
+askable pattern(Patient,pain,left_lateral_thoracic).
+askable pattern(Patient,pain,right_lateral_thoracic).
+askable provocation(Patient,pain,emotions).
+askable provocation(Patient,pain,food_consumption).
+askable provocation(Patient,pain,physical_exertion).
+askable provocation(Patient,pain,warmth_to_cold_change).
+
+sclerotic_arteries(Patient) <-
+ age(Patient) = A &
+ A > 50.
+
+sclerotic_arteries(Patient) <-
+  diabetic(Patient);
+  smoking(Patient).
+
+known_disease(Patient,angina_pectoris) <-
+  pain(Patient) &
+  similar_symptoms(Patient,angina_pectoris).
+
+known_disease(Patient,myocardial_infarction) <-
+  pain(Patient) &
+  similar_symptoms(Patient,myocardial_infarction).
+
+state(Patient,atherosclerosis) <-
+  sclerotic_arteries(Patient);
+  known_disease(Patient,myocardial_infarction);
+  known_disease(Patient,angina_pectoris).
+
+ischaemia(Patient,heart) <-
+  pain(Patient) &
+  pattern(Patient,pain,retrosternal).
+
+ischaemia(Patient,heart) <-
+  pain(Patient) &
+  pattern(Patient,pain,left_lateral_thoracic).
+
+ischaemia(Patient,heart) <-
+  pain(Patient) &
+  pattern(Patient,pain,right_lateral_thoracic).
+
+state(Patient,coronary_vasodilatation) <-
+  pain(Patient) &
+  present_treatment(Patient,anti_anginal) &
+  cardiac_pain(Patient,gone).
+
+pain(Patient,clear_provocation) <-
+  pain(Patient) &
+  provocation(Patient,pain,emotion).
+
+pain(Patient,clear_provocation) <-
+  pain(Patient) &
+   provocation(Patient,pain,food_consumption).
+
+pain(Patient,clear_provocation) <-
+  pain(Patient) &
+  provocation(Patient,pain,physical_exertion).
+
+pain(Patient,clear_provocation) <-
+  pain(Patient) &
+  provocation(Patient,pain,warmth_to_cold_change).
+
+o2_demand(Patient,heart,increased) <-
+  pain(Patient,clear_provocation).
+
+o2_demand(Patient,heart,normal) <-
+  ~pain(Patient,clear_provocation).
+
+ischaemia(Patient,heart) <-
+  pain(Patient) &
+  state(Patient,atherosclerosis).
+
+state(Patient,heart,necrosis) <-
+  state(Patient,ischaemia,irreversible).
+
+o2_supply(Patient,heart,decreased) <-
+  ischaemia(Patient,heart) &
+  o2_demand(Patient,heart,normal).
+
+state(Patient,ischaemia,irreversible) <-
+  ischaemia(Patient,heart) &
+  duration(Patient,heart,pain) = D &
+  D > 30 &
+  ~state(Patient,coronary_vasodilatation).
+
+state(Patient,ischaemia,reversible) <-
+  ischaemia(Patient,heart) &
+  duration(Patient,heart,pain) = D &
+  D < 30.
+
+state(Patient,ischaemia,reversible) <-
+  ischaemia(Patient,heart) &
+  state(Patient,coronary_vasodilatation).
+
+disorder(Patient,myocardial_infarction) <-
+  state(Patient,heart,necrosis) &
+  state(Patient,atherosclerosis).
+
+disorder(Patient,unstable_angina_pectoris) <-
+  o2_demand(Patient,heart,normal) &
+  state(Patient,ischaemia,irreversible) &
+  state(Patient,atherosclerosis).
+
+disorder(Patient,stable_angina_pectoris) <-
+  state(Patient,atherosclerosis) &
+  state(Patient,ischaemia,reversible) &
+  o2_demand(Patient,heart,increased).
+
+disorder(Patient,variant_angina_pectoris) <-
+  ~state(Patient,atherosclerosis) &
+  state(Patient,ischaemia,reversible) &
+  o2_supply(Patient,heart,decreased).
+
+condition(Patient,emergency) <-
+  disorder(Patient,unstable_angina_pectoris).
+
+condition(Patient,emergency) <-
+  disorder(Patient,myocardial_infarction).
+
+condition(Patient,no_emergency) <-
+  disorder(Patient,stable_angina_pectoris).
+
+condition(Patient,no_emergency) <-
+  disorder(Patient,variant_angina_pectoris).
