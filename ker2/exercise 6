@@ -1,0 +1,71 @@
+6. Explain how AILog computes the probability of the alarm going of. Compare AILog and variable elimination. 
+
+
+Variable Elimination; 
+
+Initial factors;
+
+f1 (Earthquake) = 
+[Earthquake T] 0.02738
+[Earthquake F] 0.97262
+
+f2 (Burgler) = 
+[Burgler T] 0.02738
+[Burgler F] 0.97262
+
+f3 (I1, Earthquake) =  
+[I1 T, Earthquake T] 0.2
+[I1 T, Earthquake F] 0.0
+[I1 F, Earthquake T] 0.8
+[I1 F, Earthquake F] 1.0
+
+f4 (I2, Burgler) = 
+[I2 T, Burgler T] 0.95
+[I2 T, Burgler F] 0.0
+[I2 F, Burgler T] 0.05
+[I2 F, Burgler F] 1.0
+
+f5 (Alarm, I1, I2) = 
+[Alarm T, I1 T, I2 T] 1.0
+[Alarm T, I1 T, I2 F] 1.0
+[Alarm T, I1 F, I2 T] 1.0
+[Alarm T, I1 F, I2 F] 0.0
+[Alarm F, I1 T, I2 T] 0.0
+[Alarm F, I1 T, I2 F] 0.0
+[Alarm F, I1 F, I2 T] 0.0
+[Alarm F, I1 F, I2 F] 1.0
+
+
+Elimination ordering: Earthquake, Burgler, I1, I2, Alarm 
+
+Eliminate Earthquake: 
+f6 = f1 (Earthquake) * f3 (I1, Earthquake)  
+
+f6 (I1) = 
+[I1 T] 0.00548
+[I1 F] 0.99452
+
+Eliminate Burgler: 
+f7 = f2 (Burgler) * f4 (I2, Burgler) 
+
+f7 (I2) = 
+[I2 T] 0.02601 
+[I2 F] 0.97399 
+
+Eliminate I1: 
+f8 = f5 (Alarm, I1, I2) * f6 (I1) 
+
+f8 (Alarm, I2) = 
+[Alarm T, I2 T] 1.0
+[Alarm T, I2 F] 0.005476000000000001
+[Alarm F, I2 T] 0.0
+[Alarm F, I2 F] 0.9945240000000001 
+
+Eliminate I2: 
+f9 = f7 (I2) * f8 (Alarm, I2) 
+
+f9 (Alarm) = 
+[Alarm T] 0.03134
+[Alarm F] 0.96866
+
+p(Alarm) = 0.03134
