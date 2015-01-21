@@ -166,3 +166,12 @@ burglar <- burglars & myHouse.
 
 prob myHouse: 3/10000.
 ```
+
+8. Yes, you could represent this in a Bayesian network. In fact, I believe I did so in the previous question.
+
+We could describe what it looks like, but I think an illustration would work better.
+
+![Burglars Bayesian Network](burglars.png)
+
+This network represents the knowledge. An advantage to this approach is that it is easy to see the dependencies and how it influences the probabilities 'down the chain'.
+A disadvantage is the rigidness (hardcoded-ness). Adding another burglar would involve making changes in multiple places.
