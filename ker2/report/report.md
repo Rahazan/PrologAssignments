@@ -175,3 +175,69 @@ We could describe what it looks like, but I think an illustration would work bet
 
 This network represents the knowledge. An advantage to this approach is that it is easy to see the dependencies and how it influences the probabilities 'down the chain'.
 A disadvantage is the rigidness (hardcoded-ness). Adding another burglar would involve making changes in multiple places.
+
+##Assignment 2-2: Visual representations and reasoning
+
+### Domain description
+
+We chose to model the domain of football club logos. More specific: "commercial" football clubs (so not the Dutch soccer team, but Ajax for instance).
+These logos have some interesting features that you see in many other logos as well.
+
+Here are two examples:
+<center>
+<img src="atletico.png" alt="Atletico" style="height: 200px;"/> <img src="barcelona.png" alt="Barcelona" style="height: 200px;"/>
+</center>
+
+These are the logos of *Club Atlético de Madrid* and *FC Barcelona*.
+As you can see, they share some features. They are both shaped like a shield (as in *wapenschild*) and both have stripes embedded in the logo.
+
+Both clubs are Spanish, could it be that Spanish football clubs logos often share features?
+
+### Modelled data
+The dataset we used was [top 50 UEFA ranked footbal clubs](http://www.uefa.com/memberassociations/uefarankings/club/).
+
+#### Logo features
+
+* **Circle:** The overall shape of the logo is circular.
+* **Shield:** The logo contain a shield (*wapenschild*) shape.
+* **Cross:** The logo contains a (christian) cross shape.
+* **Star:** The logo contains one or more star shapes.
+* **Letter:** The logo has letters, or numbers on it.
+* **Animal:** The logo has some creature on it (animal, dragon, anything)
+* **Stripe:** The logo features a stripe pattern.
+
+#### Country
+For every club logo, we also modelled the football club's country.
+
+## Representation  in AILog
+
+#### Logo features
+Modelling the features of the logos was done pretty straightforward, in the pattern:
+
+```
+club <- observation1 of logo.
+club <- observation2 of logo.
+```
+
+An example:
+
+![Steaua](steaua.png)
+
+Representation in *AILog*:
+```
+steaua <- shield.
+steaua <- star.
+steaua <- stripe.
+steaua <- letter.
+```
+
+#### Country
+
+For every country, we represented clubs in it as such:
+
+```
+esp <- realmadrid ; barcelona ; atleticomadrid ; valencia ; athletic ; villareal ; malaga.
+ger <- bayernmunchen ; schalke ; dortmund ; leverkusen ; hannover.
+eng <- chelsea ; arsenal; united; manchestercity; tottenham; liverpool.
+... (13 more countries)
+```
