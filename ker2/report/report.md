@@ -6,17 +6,16 @@ January 2015
 ----
 ##Assignment 2-1: Probalistic representation and reasoning (and burglars)
 
-1. Done.
+1 . See image below.
 
-2. We do not know the probabilities of the alarm going off given both earthquake and burglar, so we decided to add intermediate nodes and a noisy OR function for the alarm node.
+2 . We do not know the probabilities of the alarm going off given both earthquake and burglar, so we decided to add intermediate nodes and a noisy OR function for the alarm node.
 
 ![Network](network.png)
 
 
-3. We added the coresponding conditional probability tables in the same image, next to the nodes of the Bayesian network.
+3 . We added the coresponding conditional probability tables in the same image, next to the nodes of the Bayesian network.
 
-4. See `alarmbk.ail` for the full file.
-
+4 .
 Specifying the probabilities of `Earthquake` and `Burglar` was relatively straightforward.
 
 ```
@@ -50,8 +49,9 @@ alarm <- ~i1 & ~i2 & neither.
 prob neither: 0.
 ```
 
+See `alarmold.ail` for the full file
 
-5.
+5 .
 **a** The prior probability of a burglar
 ```
 ailog: predict burglar.
@@ -86,9 +86,117 @@ When the odds of an earthquake go up (because observing the radio broadcasting t
 
 **e** The most probable explanation for the observed evidence.
 
-6. To do
+6 . TODO uitleg AILog
 
-7. Modeling this proved to be quite challenging. We started off by defining a bunch of predicates like one would do in prolog.
+### Calculation by variable elimination
+
+#### Initial (relevant) factors
+
+```
+f1 (Earthquake) =
+[Earthquake T] 0.02738
+[Earthquake F] 0.97262
+
+f2 (Burglar) =
+[Burglar T] 0.02738
+[Burglar F] 0.97262
+
+f3 (I1, Earthquake) =  
+[I1 T, Earthquake T] 0.2
+[I1 T, Earthquake F] 0.0
+[I1 F, Earthquake T] 0.8
+[I1 F, Earthquake F] 1.0
+
+f4 (I2, Burglar) =
+[I2 T, Burglar T] 0.95
+[I2 T, Burglar F] 0.0
+[I2 F, Burglar T] 0.05
+[I2 F, Burglar F] 1.0
+
+f5 (Alarm, I1, I2) =
+[Alarm T, I1 T, I2 T] 1.0
+[Alarm T, I1 T, I2 F] 1.0
+[Alarm T, I1 F, I2 T] 1.0
+[Alarm T, I1 F, I2 F] 0.0
+[Alarm F, I1 T, I2 T] 0.0
+[Alarm F, I1 T, I2 F] 0.0
+[Alarm F, I1 F, I2 T] 0.0
+[Alarm F, I1 F, I2 F] 1.0
+```
+
+Elimination order:
+`Earthquake, Burglar, I1, I2, Alarm `
+
+
+Eliminate `Earthquake`:
+```
+f6 = f1 (Earthquake) * f3 (I1, Earthquake)  
+
+f6 (I1) =
+[I1 T] 0.00548
+[I1 F] 0.99452
+```
+
+Eliminate `Burglar`
+```
+f7 = f2 (Burglar) * f4 (I2, Burglar)
+
+f7 (I2) =
+[I2 T] 0.02601
+[I2 F] 0.97399
+```
+
+Eliminate `I1`
+```
+f8 = f5 (Alarm, I1, I2) * f6 (I1)
+
+f8 (Alarm, I2) =
+[Alarm T, I2 T] 1.0
+[Alarm T, I2 F] 0.00548
+[Alarm F, I2 T] 0.0
+[Alarm F, I2 F] 0.99452
+```
+
+Eliminate `I2`
+```
+f9 = f7 (I2) * f8 (Alarm, I2)
+
+f9 (Alarm) =
+[Alarm T] 0.03134
+[Alarm F] 0.96866
+```
+**Conclusion:** `p(Alarm) = 0.03134`
+
+Let's compare this to the *AILog*'s answer:
+```
+ailog: load 'alarmold.ail'.
+AILog theory alarmold.ail loaded.
+ailog: predict alarm.
+Answer: P(alarm|Obs)=[0.0003148385984490197,0.0003148985650644805].
+```
+Oops, this differs quite a lot. It seems that we started with the wrong values for `P(burglar)` and `P(earthquake)`.
+Our values were 100 times as high, resulting in around 100 times as high odds.
+
+Here is the resulting calculation with the right values for `burglar` and `earthquake`, in a shorter form:
+`(1/(365.25*10)) * 0.2 + (1/(365.25*10))*0.95 * (1 - (1/(365.25*10))*0.2)`
+`= 0.000314838598449019709808430088061911782549808598744167895279...`
+
+That's better, this matches AILog's calculations! I expected a difference due to the arbitrary precision in the last calculation, but it seems the floating point errors in *AILog* are quite small.
+
+### Comparison to AILog's approach
+
+Variable elimination involves "removing" nodes one by one, until only the question node remains.
+This has upsides downsides as it introduces a form of bookkeeping (factors). These factors are used to prevent dual calculations, which can occur in *AILog*'s approach. This is a form of dynamic programming (keeping track of what you have calculated).
+Because of this bookkeeping additional memory is required for the computation, and the order in which the variables are eliminated can influence the amount of operations necessary. So, finding a (sub-)optimal order may take even more computation than it saves!
+Another downside is that variable elimination is a method for computing probablities in a bayesian network, and not for more general 'queries'.
+The upside is that less computations are required with a reasonable order.
+
+So there are situations in which variable elimination is preferable, and situations in which *AILog*'s approach is favorable.
+The situations in which variable elimination is a good idea are those in which the problem is already defined in a bayesian network for which the order of elimination is easy to determine.
+*AILog*'s approach is much more general, and probably the right choice for all other situations.
+
+
+7 . Modeling this proved to be quite challenging. We started off by defining a bunch of predicates like one would do in prolog.
 These predicates used the `needs/2` facts directly, so that we didn't have to "hardcode" this information.
 
 A small snippet from this approach, the full attempt can be found in `alarmbk.ail`
@@ -185,13 +293,15 @@ These logos have some interesting features that you see in many other logos as w
 
 Here are two examples:
 <center>
-<img src="atletico.png" alt="Atletico" style="height: 200px;"/> <img src="barcelona.png" alt="Barcelona" style="height: 200px;"/>
+<img src="atletico.png" alt="Atletico" style="height: 280px;"/>   <img src="barcelona.png" alt="Barcelona" style="height: 280px;"/>
 </center>
 
 These are the logos of *Club Atlético de Madrid* and *FC Barcelona*.
 As you can see, they share some features. They are both shaped like a shield (as in *wapenschild*) and both have stripes embedded in the logo.
 
 Both clubs are Spanish, could it be that Spanish football clubs logos often share features?
+
+The goal is to represent these features in such a way that we can observe certain features of the logo, and ask what the most likely country is.
 
 ### Modelled data
 The dataset we used was [top 50 UEFA ranked footbal clubs](http://www.uefa.com/memberassociations/uefarankings/club/).
@@ -207,11 +317,24 @@ The dataset we used was [top 50 UEFA ranked footbal clubs](http://www.uefa.com/m
 * **Stripe:** The logo features a stripe pattern.
 
 #### Country
-For every club logo, we also modelled the football club's country.
+For every club logo, we also modeled the football club's country.
 
 ## Representation  in AILog
 
-#### Logo features
+### Logo features
+
+```
+assumable circle.
+assumable shield.
+assumable cross.
+assumable star.
+assumable letter.
+assumable animal.
+assumable stripe.
+```
+
+
+#### Logo feature observations
 Modelling the features of the logos was done pretty straightforward, in the pattern:
 
 ```
@@ -219,7 +342,7 @@ club <- observation1 of logo.
 club <- observation2 of logo.
 ```
 
-An example:
+An example, the logo of *Steaua*:
 
 ![Steaua](steaua.png)
 
