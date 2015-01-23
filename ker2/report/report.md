@@ -17,7 +17,7 @@ January 2015
 
 4 .
 Specifying the probabilities of `Earthquake` and `Burglar` was relatively straightforward.
-
+The length of a year is pretty arbitary, we opted to include an additional `.25` to account for leap years. We didn't care about leap seconds.
 ```
 prob earthquake: 1/(365.25*10).
 prob burglar: 1/(365.25*10).
@@ -304,7 +304,7 @@ Both clubs are Spanish, could it be that Spanish football clubs logos often shar
 The goal is to represent these features in such a way that we can observe certain features of the logo, and ask what the most likely country is.
 
 ### Modelled data
-The dataset we used was [top 50 UEFA ranked footbal clubs](http://www.uefa.com/memberassociations/uefarankings/club/).
+The dataset we used was the [top 50 UEFA ranked footbal clubs list](http://www.uefa.com/memberassociations/uefarankings/club/).
 
 #### Logo features
 
@@ -335,7 +335,7 @@ assumable stripe.
 
 
 #### Logo feature observations
-Modelling the features of the logos was done pretty straightforward, in the pattern:
+Modeling the features of the logos was done pretty straightforward, in the pattern:
 
 ```
 club <- observation1 of logo.
