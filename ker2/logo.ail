@@ -8,7 +8,51 @@
 % Animal
 % Stripe
 
-
+realmadrid <- letter.
+barcelona <- shield.
+barcelona <- letter.
+barcelona <- cross.
+barcelona <- stripe.
+bayermunchen <- circle.
+bayermunchen <- letter.
+chelsea <- circle.
+chelsea <- letter.
+chelsea <- animal.
+benfica <- circle.
+benfica <- shield.
+benfica <- letter.
+benfica <- animal. 
+benfica <- stripe.
+atleticomadrid <- shield.
+atleticomadrid <- star.
+atleticomadrid <- animal.
+atleticomadrid <- stripe.
+schalke <- circle.
+schalke <- letter.
+arsenal <- shield.
+arsenal <- letter.
+porto <- circle.
+porto <- shield.
+porto <- letter.
+porto <- animal.
+united <- shield. 
+united <- letter.
+united <- animal.
+dordmund <- circle.
+dordmund <- letter.
+valencia <- shield.
+valencia <- letter. 
+valencia <- animal. 
+valencia <- stripe.
+psg <- circle. 
+psg <- letter. 
+manchestercity <- shield.
+manchestercity <- animal.
+manchestercity <- letter.
+manchestercity <- star.
+manchestercity <- stripe.
+leverkusen <- letter.
+leverkusen <- animal.
 shakhtar <- letter.
 bayerleverkusen <- cross.
 bayerleverkusen <- animal. 
