@@ -161,3 +161,22 @@ aut <- salzburg.
 cze <- viktoria.
 den <- kobenhavn.
 rou <- steaua.
+
+esp <- 1/20.
+ger <- 1/18.
+eng <- 1/20.
+por <- 1/18.
+fra <- 1/20.
+ukr <- 1/14.
+sui <- 1/10.
+rus <- 1/16.
+ita <- 1/20.
+gre <- 1/18.
+ned <- 1/18.
+tur <- 1/18.
+bel <- 1/16.
+aut <- 1/10.
+cze <- 1/16.
+den <- 1/12.
+rou <- 1/18.
+
