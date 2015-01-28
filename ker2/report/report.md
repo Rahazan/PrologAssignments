@@ -390,3 +390,6 @@ ger <- bayernmunchen ; schalke ; dortmund ; leverkusen ; hannover.
 eng <- chelsea ; arsenal; united; manchestercity; tottenham; liverpool.
 ... (13 more countries)
 ```
+#### Style of reasoning
+
+We used abductive reasoning because we felt it was more suitable for this domain. It seems more useful to observe a logo of a football club and extract some features of the logo. Then we use these features to reason about which club or what competition ect. we observed than the other way around. 
