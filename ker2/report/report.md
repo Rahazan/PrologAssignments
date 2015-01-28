@@ -1,4 +1,4 @@
-#Practical Assignments (Series 2) Report BKI312 (2014-2015)
+Practical Assignments (Series 2) Report BKI312 (2014-2015)
 ----
 *Michel Meijerman and Guido Zuidhof* (s0723630 & s4160703) **Kunstmatige Intelligentie**
 January 2015
@@ -8,7 +8,7 @@ January 2015
 
 1 . See image below.
 
-2 . We do not know the probabilities of the alarm going off given both earthquake and burglar, so we decided to add intermediate nodes and a noisy OR function for the alarm node.
+2 . We do not know the probabilities of the alarm going off given both earthquake and burglar, so we decided to add intermediate nodes and a noisy OR function for the alarm node (we assume causal independence).
 
 ![Network](network.png)
 
@@ -90,7 +90,8 @@ When the odds of an earthquake go up (because observing the radio broadcasting t
 **e** The most probable explanation for the observed evidence.
 
 ```
-load 'alarmold.ail'. prob_threshold 0.00000000001. observe watson. ok. observe gibbons. ok. observe radio. ok.
+load 'alarmold.ail'. prob_threshold 0.00000000001. observe watson.
+ok. observe gibbons. ok. observe radio. ok.
 
 ailog: predict burglar.
 Answer: P(burglar|Obs)=0.001959476787703731.
@@ -104,9 +105,10 @@ Answer: P(burglar|Obs)=0.001959476787703731.
 ```
 The most likely situation where burglar is in your house given the observations is the one with the highest probability.
 
-In this case, following from the output, it's
+In this case, following from the very long output (which may not fit in PDF, see HTML file for better linewrapping), it's
 
 `world 0: [[burglar,earthquake,gibbonsWhenNoAlarm,`
+
 `radioWhenEarthquake,watsonWhenNoAlarm,~intermediate1WhenEQ,~intermediate2WhenBurglar]`
 
 ### Calculation by variable elimination
@@ -201,15 +203,17 @@ Our values were 100 times as high, resulting in around 100 times as high odds.
 
 Here is the resulting calculation with the right values for `burglar` and `earthquake`, in a shorter form:
 `(1/(365.25*10)) * 0.2 + (1/(365.25*10))*0.95 * (1 - (1/(365.25*10))*0.2)`
-`= 0.000314838598449019709808430088061911782549808598744167895279...`
+`= 0.00031483859844901970980843...`
 
 That's better, this matches AILog's calculations! I expected a difference due to the arbitrary precision in the last calculation, but it seems the floating point errors in *AILog* are quite small.
 
 ### Comparison to AILog's approach
 
 An AILog program contains facts and constraints in first order logic. Hypotheses are represented as a set of assumables. The logic formula are converted to horn clauses and then SLD resolution is used to derive the goal clauses.
+
 Variable elimination involves "removing" nodes one by one, until only the question node remains.
 This has upsides downsides as it introduces a form of bookkeeping (factors). These factors are used to prevent dual calculations, which can occur in *AILog*'s approach. This is a form of dynamic programming (keeping track of what you have calculated).
+
 Because of this bookkeeping additional memory is required for the computation, and the order in which the variables are eliminated can influence the amount of operations necessary. So, finding a (sub-)optimal order may take even more computation than it saves!
 Another downside is that variable elimination is a method for computing probabilities in a Bayesian network, and not for more general 'queries'.
 The upside is that less computations are required with a reasonable order.
@@ -598,3 +602,22 @@ Logo's with less features present are more likely to define the country. We are 
 
 Extending the model to a larger dataset, for more realistic real time operation is very straightforward. It involves simply adding more clubs by defining it's constraints, and updating the representativeness bias per country!
 Also, more features could be added. Football club logos share many more features, for instance main color or the presence of a football in the logo.
+
+## Additional questions
+
+### 2-1
+
+#### How much time did it take you to finish it?
+We didn't really keep track of time, but we can make an educated guess. Around 4 werkcolleges, and an additional 6 hours outside of that.
+
+#### If you would have to change aspects of the assignment: what would they be and why?
+This assignment was actually pretty clear :).
+
+### 2-2
+
+#### How much time did it take you to finish it?
+Again, this time wasn't really tracked. I guess.. around 1 werkcollege and 12 hours of working together on it.
+
+#### If you would have to change aspects of the assignment: what would they be and why?
+Despite the many domain examples, it was still very hard to come up with a domain. It was not clear which domain meets the expectations of ambiguity of interpretation.
+We feel we have met the requirements in the end, but it took us a lot of brainstorming to get there.
