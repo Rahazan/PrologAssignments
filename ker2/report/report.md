@@ -74,17 +74,41 @@ Answer: P(burglar|Obs)=[0.012679674914803903,0.012762846117401184].
 **d**  The probability of a burglary given that the newscast reported an earthquake.
 
 ```
+ailog: prob_threshold 0.0000000001.
+%
+% All previous commands.
+%
 ailog: observe radio.
-Answer: P(radio|Obs)=[0.0030815093357329077,0.0031891013335391344].
-ailog: prob_threshold 0.0000001.
+Answer: P(radio|Obs)=0.003087006752473501.
 ailog: predict burglar.
-Answer: P(burglar|Obs)=[0.00022913576367648462,0.03396653904864052].
+Answer: P(burglar|Obs)=0.001959476787703731.
 ```
 This probability only becames smaller upon observing the news broadcasting an earthquake. The odds of a burglar given that Gibson and Watson report an alarm were already very small.
 
 When the odds of an earthquake go up (because observing the radio broadcasting this news makes it more likely there was an earthquake) increase the chance of the alarm being caused by an earthquake, decreasing the chance of a burglary given that Watson and Gibson reported an alarm. Hence this chance is smaller than the previous query.
 
 **e** The most probable explanation for the observed evidence.
+
+```
+load 'alarmold.ail'. prob_threshold 0.00000000001. observe watson. ok. observe gibbons. ok. observe radio. ok.
+
+ailog: predict burglar.
+Answer: P(burglar|Obs)=0.001959476787703731.
+  [ok,more,explanations,worlds,help]: worlds.
+  0: [burglar,earthquake,gibbonsWhenNoAlarm,radioWhenEarthquake,watsonWhenNoAlarm,~intermediate1WhenEQ,~intermediate2WhenBurglar]  Prob=4.796369771016547e-11
+  1: [burglar,gibbonsWhenNoAlarm,radioWhenNoEarthquake,watsonWhenNoAlarm,~earthquake,~intermediate2WhenBurglar]  Prob=4.37936192710215e-11
+  2: [burglar,earthquake,gibbonsWhenAlarm,intermediate2WhenBurglar,only2,radioWhenEarthquake,watsonWhenAlarm,~intermediate1WhenEQ]  Prob=4.510985769641058e-8
+  3: [burglar,gibbonsWhenAlarm,intermediate2WhenBurglar,only2,radioWhenNoEarthquake,watsonWhenAlarm,~earthquake]  Prob=4.1187898924395694e-8
+  4: [burglar,earthquake,gibbonsWhenAlarm,intermediate1WhenEQ,only1,radioWhenEarthquake,watsonWhenAlarm,~intermediate2WhenBurglar]  Prob=5.935507591632977e-10
+  5: [both,burglar,earthquake,gibbonsWhenAlarm,intermediate1WhenEQ,intermediate2WhenBurglar,radioWhenEarthquake,watsonWhenAlarm]  Prob=1.1277464424102645e-8
+```
+The most likely situation where burglar is in your house given the observations is the one with the highest probability.
+
+In this case, following from the output, it's
+
+`world 0: [[burglar,earthquake,gibbonsWhenNoAlarm,`
+`radioWhenEarthquake,watsonWhenNoAlarm,~intermediate1WhenEQ,~intermediate2WhenBurglar]`
+
 
 6 . TODO uitleg AILog
 
