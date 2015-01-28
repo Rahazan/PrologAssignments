@@ -13,11 +13,11 @@ January 2015
 ![Network](network.png)
 
 
-3 . We added the coresponding conditional probability tables in the same image, next to the nodes of the Bayesian network.
+3 . We added the corresponding conditional probability tables in the same image, next to the nodes of the Bayesian network.
 
 4 .
 Specifying the probabilities of `Earthquake` and `Burglar` was relatively straightforward.
-The length of a year is pretty arbitary, we opted to include an additional `.25` to account for leap years. We didn't care about leap seconds.
+The length of a year is pretty arbitrary, we opted to include an additional `.25` to account for leap years. We didn't care about leap seconds.
 ```
 prob earthquake: 1/(365.25*10).
 prob burglar: 1/(365.25*10).
@@ -83,7 +83,7 @@ Answer: P(radio|Obs)=0.003087006752473501.
 ailog: predict burglar.
 Answer: P(burglar|Obs)=0.001959476787703731.
 ```
-This probability only becames smaller upon observing the news broadcasting an earthquake. The odds of a burglar given that Gibson and Watson report an alarm were already very small.
+This probability only becomes smaller upon observing the news broadcasting an earthquake. The odds of a burglar given that Gibson and Watson report an alarm were already very small.
 
 When the odds of an earthquake go up (because observing the radio broadcasting this news makes it more likely there was an earthquake) increase the chance of the alarm being caused by an earthquake, decreasing the chance of a burglary given that Watson and Gibson reported an alarm. Hence this chance is smaller than the previous query.
 
@@ -108,9 +108,6 @@ In this case, following from the output, it's
 
 `world 0: [[burglar,earthquake,gibbonsWhenNoAlarm,`
 `radioWhenEarthquake,watsonWhenNoAlarm,~intermediate1WhenEQ,~intermediate2WhenBurglar]`
-
-
-6 . TODO uitleg AILog
 
 ### Calculation by variable elimination
 
