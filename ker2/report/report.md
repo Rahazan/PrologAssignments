@@ -118,34 +118,35 @@ In this case, following from the output, it's
 
 ```
 f1 (Earthquake) =
-[Earthquake T] 0.02738
-[Earthquake F] 0.97262
+(Earthquake) 0.02738
+(¬Earthquake) 0.97262
 
 f2 (Burglar) =
-[Burglar T] 0.02738
-[Burglar F] 0.97262
+(Burglar) 0.02738
+(¬Burglar) 0.97262
 
 f3 (I1, Earthquake) =  
-[I1 T, Earthquake T] 0.2
-[I1 T, Earthquake F] 0.0
-[I1 F, Earthquake T] 0.8
-[I1 F, Earthquake F] 1.0
+(I1, Earthquake) 0.2
+(I1, ¬Earthquake) 0.0
+(¬I1, Earthquake) 0.8
+(¬I1, ¬Earthquake) 1.0
 
 f4 (I2, Burglar) =
-[I2 T, Burglar T] 0.95
-[I2 T, Burglar F] 0.0
-[I2 F, Burglar T] 0.05
-[I2 F, Burglar F] 1.0
+(I2, Burglar) 0.95
+(I2, Burglar) 0.0
+(¬I2, ¬Burglar) 0.05
+(¬I2, ¬Burglar) 1.0
 
 f5 (Alarm, I1, I2) =
-[Alarm T, I1 T, I2 T] 1.0
-[Alarm T, I1 T, I2 F] 1.0
-[Alarm T, I1 F, I2 T] 1.0
-[Alarm T, I1 F, I2 F] 0.0
-[Alarm F, I1 T, I2 T] 0.0
-[Alarm F, I1 T, I2 F] 0.0
-[Alarm F, I1 F, I2 T] 0.0
-[Alarm F, I1 F, I2 F] 1.0
+(Alarm, I1, I2) 1.0
+(Alarm, I1, ¬I2) 1.0
+(Alarm, ¬I1, I2) 1.0
+(Alarm, ¬I1, ¬I2) 0.0
+(¬Alarm, I1, I2) 0.0
+(¬Alarm, I1, ¬I2) 0.0
+(¬Alarm, ¬I1, I2) 0.0
+(¬Alarm, ¬I1, ¬I2) 1.0
+
 ```
 
 Elimination order:
