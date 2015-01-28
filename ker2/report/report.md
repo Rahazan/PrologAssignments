@@ -382,7 +382,7 @@ steaua <- star.
 steaua <- stripe.
 steaua <- letter.
 ```
-This was however the wrong approach, as a feature consists of all of these features, and the absence of other features.
+This was however the wrong approach, as a feature consists of all of these observations, and the absence of other observations.
 It is more of a *constraint-based*/*constraint-satisfaction* problem.
 
 Here is what we settled for, we define the constraints per logo.
@@ -579,7 +579,7 @@ Many Italian clubs have letters in their logo!
 The model is fairly effective. Some big assumptions have been made about the feature likelihood though.
 
 Areas where there is room for improvement:
-* A country like Belgium has one club, if the a conflicting observation has been made with it's logo, the odds of `isbel` become 0. Which is not correct, as there may very well be a club in Belgium. A solution would be to somehow capture the likelihood of features per country, instead of using a dataset. Another solution would be a complete dataset.
+* A country like Belgium has one club, if a observation has been made that is conflicting with the logo of this club, the odds of `isbel` become 0. Which is not correct, as there may very well be another club in Belgium that was observed. A solution would be to somehow capture the likelihood of features per country, instead of using a dataset. Another solution would be a complete dataset.
 * The representativeness bias may need to be adjusted. It currently has the effect that if one logo fits all possible constraints, it may still not be the club's country as not all clubs are modelled. I feel this is off.
 * Like noted before, querying by most likely country is straightforward. The same can not be said for clubs unfortunately. A solution could be to add another 'constraint' per club-to-country clause that is the club's name, with a probability of 1. This would allow for easily reading which club logo it represents.
 * There is no `XOR` in club logo's/countries. If all clubs would be modelled, the probabilities of all clubs may still not add up to 1 (no choice has to be made). So, if I observe 'France', the probability of other countries does not drop to 0.
