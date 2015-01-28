@@ -157,8 +157,8 @@ Eliminate `Earthquake`:
 f6 = f1 (Earthquake) * f3 (I1, Earthquake)  
 
 f6 (I1) =
-[I1 T] 0.00548
-[I1 F] 0.99452
+(I1) 0.00548
+(¬I1) 0.99452
 ```
 
 Eliminate `Burglar`
@@ -166,8 +166,8 @@ Eliminate `Burglar`
 f7 = f2 (Burglar) * f4 (I2, Burglar)
 
 f7 (I2) =
-[I2 T] 0.02601
-[I2 F] 0.97399
+(I2) 0.02601
+(¬I2) 0.97399
 ```
 
 Eliminate `I1`
@@ -175,10 +175,10 @@ Eliminate `I1`
 f8 = f5 (Alarm, I1, I2) * f6 (I1)
 
 f8 (Alarm, I2) =
-[Alarm T, I2 T] 1.0
-[Alarm T, I2 F] 0.00548
-[Alarm F, I2 T] 0.0
-[Alarm F, I2 F] 0.99452
+(Alarm T, I2) 1.0
+(Alarm T, ¬I2) 0.00548
+(¬Alarm F, I2) 0.0
+(¬Alarm F, ¬I2) 0.99452
 ```
 
 Eliminate `I2`
@@ -186,8 +186,8 @@ Eliminate `I2`
 f9 = f7 (I2) * f8 (Alarm, I2)
 
 f9 (Alarm) =
-[Alarm T] 0.03134
-[Alarm F] 0.96866
+(Alarm) 0.03134
+(¬Alarm) 0.96866
 ```
 **Conclusion:** `p(Alarm) = 0.03134`
 
