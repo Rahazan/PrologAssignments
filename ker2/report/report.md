@@ -348,18 +348,20 @@ For every club logo, we also modeled the football club's country.
 ### Logo features
 
 ```
-assumable circle.
-assumable shield.
-assumable cross.
-assumable star.
-assumable letter.
-assumable animal.
-assumable stripe.
+prob circle: 0.10.
+prob shield: 0.10.
+prob cross: 0.10.
+prob star: 0.10.
+prob letter: 0.10.
+prob animal: 0.10.
+prob stripe: 0.10.
 ```
+Here some modelling decisions had to be made. What is the likelihood of a circle without observing it?
+We decided to use 10% for every feature, so an assumption is made that all of these features are 'missed' as often as others, and are as defining as others.
 
 
 #### Logo feature observations
-Modeling the features of the logos was done pretty straightforward, in the pattern:
+We thought modeling the features of the logos would be pretty straightforward, in the pattern:
 
 ```
 club <- observation1 of logo.
@@ -377,6 +379,15 @@ steaua <- star.
 steaua <- stripe.
 steaua <- letter.
 ```
+This was however the wrong approach, as a feature consists of all of these features, and the absence of other features.
+It is a more *constraint-based* problem.
+
+Here is what we settled for, we define the constraints per logo.
+```
+steaua <- ~circle & shield & ~cross & star & letter & ~animal & stripe.
+```
+
+
 
 #### Country
 
@@ -388,3 +399,199 @@ ger <- bayernmunchen ; schalke ; dortmund ; leverkusen ; hannover.
 eng <- chelsea ; arsenal; united; manchestercity; tottenham; liverpool.
 ... (13 more countries)
 ```
+
+Unfortunately, AILog does not support the `;` operator for *or* constructs, so a clause had to be made for every club as such:
+
+```
+esp <- realmadrid.
+esp <- barcelona.
+esp <- atleticomadrid.
+esp <- valencia.
+esp <- athletic.
+esp <- villareal.
+esp <- malaga.
+ger <- bayernmunchen.
+...
+```
+
+#### Representativity bias
+Some countries, such as Spain, represent a much larger slice of the top 50 football clubs.
+So we (likely) have a more representative part of the Spanish top football clubs.
+
+We felt we had to capture this into our model, we did it as such:
+
+For every country, we determined the size of the national top tier football league (*eredivisie* equivalent). Let's call this `size`.
+Then, we counted the amount of those clubs in the top 50, let's call this `count`.
+
+We encoded the representativeness bias as `size/count`. Resulting probabilities:
+```
+prob espC : 7/20.
+prob gerC : 5/18.
+prob engC : 6/20.
+prob porC : 4/18.
+prob fraC : 3/20.
+...
+```
+
+Then, we created clauses for querying which takes this representative-ness into account:
+```
+%Country polling variables
+isesp <- espC & esp.
+isger <- gerC & ger.
+iseng <- engC & eng.
+ispor <- porC & por.
+isfra <- fraC & fra.
+...
+```
+
+Finally, one clause was created for easier querying of 'any' country.
+This is useful for checking which country is the most likely.
+```
+any <- isesp.
+any <- isger.
+any <- iseng.
+any <- ispor.
+...
+```
+
+### Style of reasoning
+
+TODO: Style of reasoning, considerations.
+
+### Queries and results
+
+#### If I know nothing about the logo, what are the odds it's Spanish or French?
+```
+ailog: predict isfra.
+Answer: P(isfra|Obs)=0.001869885.
+```
+
+```
+ailog: predict isesp.
+Answer: P(isesp|Obs)=0.020973330000000002.
+```
+
+The bias is clearly working here, as the probability of `isesp` are much higher. Things of course are much more interesting with observations!
+
+
+#### How about if I see a cross?
+
+```
+ailog: observe cross.
+Answer: P(cross|Obs)=0.1.
+  [ok,more,explanations,worlds,help]: ok.
+```
+```
+ailog: predict isfra.
+No (more) answers.
+```
+
+```
+ailog: predict isesp.
+Answer: P(isesp|Obs)=0.00025515000000000005.
+```
+None of the French logos seem to have a cross in it!
+
+#### How about if I do specifically not observe a cross?
+```
+ailog: observe ~cross.
+Answer: P(~cross|Obs)=0.9.
+  [ok,more,explanations,worlds,help]: ok.
+```
+
+```
+ailog: predict isfra.
+Answer: P(isfra|Obs)=0.00207765.
+```
+
+```
+ailog: predict isesp.
+Answer: P(isesp|Obs)=0.02327535.
+```
+
+Given this observation, it's quite ambiguous whether we are looking at a French or Spanish logo here!
+
+#### More complex query
+
+I am sure I see no cross or animal, but I do see letters and a shield.
+
+```
+ailog: observe ~cross. ok. observe ~animal. ok. observe letter. ok. observe shield. ok.
+Answer: P(~cross|Obs)=0.9.
+  [ok,more,explanations,worlds,help]: ailog: Answer: P(~animal|Obs)=0.9.
+  [ok,more,explanations,worlds,help]: ailog: Answer: P(letter|Obs)=0.10000000000000002.
+  [ok,more,explanations,worlds,help]: ailog: Answer: P(shield|Obs)=0.10000000000000002.
+```
+
+##### Which country is the likely?
+
+```
+ailog: predict any.
+Answer: P(any|Obs)=0.3914937499999998.
+  [ok,more,explanations,worlds,help]: worlds.
+  0: [letter,rouC,shield,star,stripe,~animal,~circle,~cross]  Prob=4.05e-6
+  1: [letter,shield,star,suiC,~animal,~circle,~cross,~stripe]  Prob=6.561000000000002e-5
+  2: [engC,letter,shield,~animal,~circle,~cross,~star,~stripe]  Prob=0.00177147
+  3: [greC,letter,shield,stripe,~animal,~circle,~cross,~espC,~star]  Prob=4.738500000000001e-5
+  4: [letter,rusC,shield,star,~animal,~circle,~cross,~stripe,~suiC]  Prob=0.00011071687500000006
+  5: [letter,porC,shield,~animal,~circle,~cross,~engC,~star,~stripe]  Prob=0.00091854
+  6: [czeC,espC,letter,shield,stripe,~animal,~circle,~cross,~star]  Prob=1.43521875e-5
+  7: [espC,letter,shield,stripe,~animal,~circle,~cross,~czeC,~star]  Prob=0.0002152828125
+  8: [czeC,letter,shield,stripe,~animal,~circle,~cross,~espC,~greC,~star]  Prob=2.3692500000000004e-5
+Answer: P(any|Obs)=0.3914937499999998.
+```
+
+This one is a bit hard to read, but you can see that world 2 is quite likely. This world contains `engC`, so it's most likely an English club.
+Unfortunately, determining which club it is needs a manual lookup.. which is unfortunate.
+
+##### Could it be a Dutch club?
+```
+ailog: predict isned.
+No (more) answers.
+```
+Nope. This is because none of the Dutch clubs in the dataset satisfy the observed constraints.
+There should however, still be a chance, as not all the Dutch clubs are modelled. Our model does not capture this, see reflection for a proposed solution.
+
+#### Let's try some abductive querying.
+
+I observe one of the Italian clubs in the list
+```
+ailog: observe ita.
+Answer: P(ita|Obs)=0.06626610000000004.
+```
+
+What are the odds that there are letters in the logo?
+```
+ailog: predict letter.
+Answer: P(letter|Obs)=0.9108910891089108.
+```
+Many Italian clubs have letters in their logo!
+
+
+### Reflection
+The model is fairly effective. Some big assumptions have been made about the feature likelihood though.
+
+Areas where there is room for improvement:
+* A country like Belgium has one club, if the a conflicting observation has been made with it's logo, the odds of `isbel` become 0. Which is not correct, as there may very well be a club in Belgium. A solution would be to somehow capture the likelihood of features per country, instead of using a dataset. Another solution would be a complete dataset.
+* The representativeness bias may need to be adjusted. It currently has the effect that if one logo fits all possible constraints, it may still not be the club's country as not all clubs are modelled. I feel this is off.
+* Like noted before, querying by most likely country is straightforward. The same can not be said for clubs unfortunately. A solution could be to add another 'constraint' per club-to-country clause that is the club's name, with a probability of 1. This would allow for easily reading which club logo it represents.
+* There is no `XOR` in club logo's/countries. If all clubs would be modelled, the probabilities of all clubs may still not add up to 1 (no choice has to be made). So, if I observe 'France', the probability of other countries does not drop to 0.
+
+Another "emergent behavior" of our model was this:
+
+```
+ailog: predict eng.
+Answer: P(eng|Obs)=0.013194900000000006.
+  [ok,more,explanations,worlds,help]: worlds.
+  0: [animal,letter,shield,~circle,~cross,~star,~stripe]  Prob=0.0006561000000000002
+  1: [animal,letter,~circle,~cross,~shield,~star,~stripe]  Prob=0.005904900000000003
+  2: [animal,letter,shield,star,~circle,~cross,~stripe]  Prob=7.290000000000002e-5
+  3: [letter,shield,~animal,~circle,~cross,~star,~stripe]  Prob=0.005904900000000003
+  4: [animal,circle,letter,~cross,~shield,~star,~stripe]  Prob=0.0006561000000000002
+```
+Logo's with less features present are more likely to define the country. We are not certain this is desirable, it is caused by the logo feature probability of `0.10` "favoring" absent features.
+
+------
+
+Extending the model to a larger dataset, for more realistic real time operation is very straightforward. It involves simply adding more clubs by defining it's constraints, and updating the representativeness bias per country!
+Also, more features could be added. Football club logos share many more features, for instance main color or the presence of a football in the logo.

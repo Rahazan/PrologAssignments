@@ -8,153 +8,125 @@
 % Animal
 % Stripe
 
-realmadrid <- letter.
-barcelona <- shield.
-barcelona <- letter.
-barcelona <- cross.
-barcelona <- stripe.
-bayermunchen <- circle.
-bayermunchen <- letter.
-chelsea <- circle.
-chelsea <- letter.
-chelsea <- animal.
-benfica <- circle.
-benfica <- shield.
-benfica <- letter.
-benfica <- animal. 
-benfica <- stripe.
-atleticomadrid <- shield.
-atleticomadrid <- star.
-atleticomadrid <- animal.
-atleticomadrid <- stripe.
-schalke <- circle.
-schalke <- letter.
-arsenal <- shield.
-arsenal <- letter.
-porto <- circle.
-porto <- shield.
-porto <- letter.
-porto <- animal.
-united <- shield. 
-united <- letter.
-united <- animal.
-dordmund <- circle.
-dordmund <- letter.
-valencia <- shield.
-valencia <- letter. 
-valencia <- animal. 
-valencia <- stripe.
-psg <- circle. 
-psg <- letter. 
-manchestercity <- shield.
-manchestercity <- animal.
-manchestercity <- letter.
-manchestercity <- star.
-manchestercity <- stripe.
-leverkusen <- letter.
-leverkusen <- animal.
-shakhtar <- letter.
-bayerleverkusen <- cross.
-bayerleverkusen <- animal. 
-bayerleverkusen <- letter.
-basel <- shield. 
-basel <- letter. 
-basel <- star.
-tottenham <- animal. 
-tottenham <- letter.
-zenit <- letter.
-milan <- stripe.
-milan <- letter.
-milan <- cross.
-juventus <- stripe.
-juventus <- animal.
-lyon <- letter.
-lyon <- animal.
-lyon <- shield.
-inter <- circle.
-inter <- letter.
-napoli <- letter.
-olympiacos <- letter.
-olympiacos <- circle.
-olympiacos <- star.
-ajax <- letter.
-ajax <- circle.
-sevilla <- shield.
-sevilla <- letter.
-sevilla <- stripe.
-dynamo <- letter.
-dynamo <- star.
-psv <- letter.
-psv <- stripe.
-rubin <- letter.
-rubin <- circle.
-rubin <- animal.
-cska <- letter.
-cska <- shield.
-cska <- star.
-marseille <- star.
-marseille <- letter.
-sporting <- animal.
-sporting <- shield.
-sporting <- stripe.
-athletic <- shield.
-athletic <- letter.
-athletic <- stripe.
-villareal <- letter.
-villareal <- circle.
-braga <- shield.
-braga <- letter.
-galatasaray <- star.
-galatasaray <- letter.
-lazio <- shield.
-lazio <- letter.
-lazio <- animal.
-az <- letter.
-anderlecht <- stripe.
-anderlecht <- letter.
-anderlecht <- star.
-liverpool <- animal.
-liverpool <- letter.
-liverpool <- shield.
-metalist <- stripe.
-metalist <- animal.
-metalist <- letter.
-twente <- shield.
-twente <- letter.
-twente <- animal.
-salzburg <- letter.
-salzburg <- shield.
-salzburg <- animal.
-viktoria <- shield.
-viktoria <- letter.
-viktoria <- stripe.
-hannover <- circle.
-hannover <- letter.
-kobenhavn <- circle.
-kobenhavn <- animal.
-kobenhavn <- letter.
-paok <- stripe.
-paok <- shield.
-paok <- letter.
-malaga <- shield.
-malaga <- stripe.
-malaga <- letter.
-steaua <- shield.
-steaua <- star.
-steaua <- stripe.
-steaua <- letter.
+% Uncomment for automatic queries
+%askable circle.
+%askable shield.
+%askable cross.
+%askable star.
+%askable letter.
+%askable animal.
+%askable stripe.
 
-esp <- realmadrid ; barcelona ; atleticomadrid ; valencia ; athletic ; villareal ; malaga.
-ger <- bayernmunchen ; schalke ; dortmund ; leverkusen ; hannover.
-eng <- chelsea ; arsenal; united; manchestercity; tottenham; liverpool.
-por <- benfica ; porto ; sporting ; braga.
-fra <- psg ; lyon ; marseille.
-ukr <- shakhtar; dynamo; metalist.
+prob circle: 0.10.
+prob shield: 0.10.
+prob cross: 0.10.
+prob star: 0.10.
+prob letter: 0.10.
+prob animal: 0.10.
+prob stripe: 0.10.
+
+
+%Contraints
+%~circle & ~shield & ~cross & ~star & ~letter & ~animal & ~stripe.
+
+realmadrid <- ~circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+barcelona <- ~circle & shield & cross & ~star & letter & ~animal & stripe.
+bayernmunchen <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+chelsea <- circle & ~shield & ~cross & ~star & letter & animal & ~stripe.
+benfica <- circle & shield & ~cross & ~star & letter & animal & stripe.
+atleticomadrid <- ~circle & shield & ~cross & star & ~letter & animal & stripe.
+schalke <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+arsenal <- ~circle & shield & ~cross & ~star & letter & ~animal & ~stripe.
+porto <- circle & shield & ~cross & ~star & letter & animal & ~stripe.
+united <- ~circle & shield & ~cross & ~star & letter & animal & ~stripe.
+dortmund <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+valencia <- ~circle & shield & ~cross & ~star & letter & animal & stripe.
+psg <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+manchestercity <- ~circle & shield & ~cross & star & letter & animal & ~stripe.
+leverkusen <- ~circle & ~shield & ~cross & ~star & letter & animal & ~stripe.
+shakhtar <- ~circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+bayerleverkusen <- ~circle & ~shield & cross & ~star & letter & animal & ~stripe.
+basel <- ~circle & shield & ~cross & star & letter & ~animal & ~stripe.
+tottenham <- ~circle & ~shield & ~cross & ~star & letter & animal & ~stripe.
+zenit <- ~circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+milan <- ~circle & ~shield & cross & ~star & letter & ~animal & stripe.
+juventus <- ~circle & ~shield & ~cross & ~star & ~letter & animal & stripe.
+lyon <- ~circle & shield & ~cross & ~star & letter & animal & ~stripe.
+inter <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+napoli <- ~circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+olympiacos <- circle & ~shield & ~cross & star & letter & ~animal & ~stripe.
+ajax <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+sevilla <- ~circle & shield & ~cross & ~star & letter & ~animal & stripe.
+dynamo <- ~circle & ~shield & ~cross & star & letter & ~animal & ~stripe.
+psv <- ~circle & ~shield & ~cross & ~star & letter & ~animal & stripe.
+rubin <- circle & ~shield & ~cross & ~star & letter & animal & ~stripe.
+cska <- ~circle & shield & ~cross & star & letter & ~animal & ~stripe.
+marseille <- ~circle & ~shield & ~cross & star & letter & ~animal & ~stripe.
+sporting <- ~circle & shield & ~cross & ~star & ~letter & animal & stripe.
+athletic <- ~circle & shield & ~cross & ~star & letter & ~animal & stripe.
+villareal <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+braga <- ~circle & shield & ~cross & ~star & letter & ~animal & ~stripe.
+galatasaray <- ~circle & ~shield & ~cross & star & letter & ~animal & ~stripe.
+lazio <- ~circle & shield & ~cross & ~star & letter & animal & ~stripe.
+az <- ~circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+anderlecht <- ~circle & ~shield & ~cross & star & letter & ~animal & stripe.
+liverpool <- ~circle & shield & ~cross & ~star & letter & animal & ~stripe.
+metalist <- ~circle & ~shield & ~cross & ~star & letter & animal & stripe.
+twente <- ~circle & shield & ~cross & ~star & letter & animal & ~stripe.
+salzburg <- ~circle & shield & ~cross & ~star & letter & animal & ~stripe.
+viktoria <- ~circle & shield & ~cross & ~star & letter & ~animal & stripe.
+hannover <- circle & ~shield & ~cross & ~star & letter & ~animal & ~stripe.
+kobenhavn <- circle & ~shield & ~cross & ~star & letter & animal & ~stripe.
+paok <- ~circle & shield & ~cross & ~star & letter & ~animal & stripe.
+malaga <- ~circle & shield & ~cross & ~star & letter & ~animal & stripe.
+steaua <- ~circle & shield & ~cross & star & letter & ~animal & stripe.
+
+%Clubs belonging to countries
+
+esp <- realmadrid.
+esp <- barcelona.
+esp <- atleticomadrid.
+esp <- valencia.
+esp <- athletic.
+esp <- villareal.
+esp <- malaga.
+ger <- bayernmunchen.
+ger <- schalke.
+ger <- dortmund.
+ger <- leverkusen.
+ger <- hannover.
+eng <- chelsea.
+eng <- arsenal.
+eng <- united.
+eng <- manchestercity.
+eng <- tottenham.
+eng <- liverpool.
+por <- benfica.
+por <- porto.
+por <- sporting.
+por <- braga.
+fra <- psg.
+fra <- lyon.
+fra <- marseille.
+ukr <- shakhtar.
+ukr <- dynamo.
+ukr <- metalist.
 sui <- basel.
-rus <- zenit; rubin; cska.
-ita <- milan; juventus; inter; napoli; lazio.
-gre <- olympiacos; paok.
-ned <- ajax; psv; az; twente.
+rus <- zenit.
+rus <- rubin.
+rus <- cska.
+ita <- milan.
+ita <- juventus.
+ita <- inter.
+ita <- napoli.
+ita <- lazio.
+gre <- olympiacos.
+gre <- paok.
+ned <- ajax.
+ned <- psv.
+ned <- az.
+ned <- twente.
+sui <- basel.
 tur <- galatasaray.
 bel <- anderlecht.
 aut <- salzburg.
@@ -162,21 +134,65 @@ cze <- viktoria.
 den <- kobenhavn.
 rou <- steaua.
 
-esp <- 1/20.
-ger <- 1/18.
-eng <- 1/20.
-por <- 1/18.
-fra <- 1/20.
-ukr <- 1/14.
-sui <- 1/10.
-rus <- 1/16.
-ita <- 1/20.
-gre <- 1/18.
-ned <- 1/18.
-tur <- 1/18.
-bel <- 1/16.
-aut <- 1/10.
-cze <- 1/16.
-den <- 1/12.
-rou <- 1/18.
+%Country polling variables
 
+isesp <- espC & esp.
+isger <- gerC & ger.
+iseng <- engC & eng.
+ispor <- porC & por.
+isfra <- fraC & fra.
+isukr <- ukrC & ukr.
+issui <- suiC & sui.
+isrus <- rusC & rus.
+isita <- itaC & ita.
+isgre <- greC & gre.
+isned <- nedC & ned.
+istur <- turC & tur.
+isbel <- belC & bel.
+isaut <- autC & aut.
+iscze <- czeC & cze.
+isden <- denC & den.
+isrou <- rouC & rou.
+
+% Query variable, so that we can see most likely country.
+
+any <- isesp.
+any <- isger.
+any <- iseng.
+any <- ispor.
+any <- isfra.
+any <- isukr.
+any <- issui.
+any <- isrus.
+any <- isita.
+any <- isgre.
+any <- isned.
+any <- istur.
+any <- isbel.
+any <- isaut.
+any <- iscze.
+any <- isden.
+any <- isrou.
+
+
+% Fraction of top clubs modelled per country.
+
+prob espC : 7/20.
+prob gerC : 5/18.
+prob engC : 6/20.
+prob porC : 4/18.
+prob fraC : 3/20.
+prob ukrC : 3/14.
+prob suiC : 1/10.
+prob rusC : 3/16.
+
+prob itaC : 5/20.
+prob greC : 2/18.
+prob nedC : 4/18.
+
+prob turC : 1/18.
+prob belC : 1/16.
+prob autC : 1/10.
+prob czeC : 1/16.
+prob denC : 1/12.
+prob rouC : 1/18.
