@@ -211,11 +211,11 @@ An AILog program contains facts and constraints in first order logic. Hypotheses
 Variable elimination involves "removing" nodes one by one, until only the question node remains.
 This has upsides downsides as it introduces a form of bookkeeping (factors). These factors are used to prevent dual calculations, which can occur in *AILog*'s approach. This is a form of dynamic programming (keeping track of what you have calculated).
 Because of this bookkeeping additional memory is required for the computation, and the order in which the variables are eliminated can influence the amount of operations necessary. So, finding a (sub-)optimal order may take even more computation than it saves!
-Another downside is that variable elimination is a method for computing probablities in a bayesian network, and not for more general 'queries'.
+Another downside is that variable elimination is a method for computing probabilities in a Bayesian network, and not for more general 'queries'.
 The upside is that less computations are required with a reasonable order.
 
 So there are situations in which variable elimination is preferable, and situations in which *AILog*'s approach is favorable.
-The situations in which variable elimination is a good idea are those in which the problem is already defined in a bayesian network for which the order of elimination is easy to determine.
+The situations in which variable elimination is a good idea are those in which the problem is already defined in a Bayesian network for which the order of elimination is easy to determine.
 *AILog*'s approach is much more general, and probably the right choice for all other situations.
 
 
@@ -239,9 +239,9 @@ allGoing([X|XS], Going) <-
   allGoing(XS)
 .
 ```
-We quickly found out that ailog isn't merely a superset of prolog. Although the code we defined may have been correct, the ailog REPL couldn't answer simple queries about it.
+We quickly found out that *AILog* isn't merely a superset of prolog. Although the code we defined may have been correct, the *AILog* *REPL* couldn't answer simple queries about it.
 
-So we changed our approach, and instead we used the structure we used to define the bayesian network in the previous questions.
+So we changed our approach, and instead we used the structure we used to define the Bayesian network in the previous questions.
 The full implementation can be found in `alarm.ail`. Here we discuss how every part of the problem domain is captured.
 
 #### Burglars go, on average, 5 days out of 7
@@ -270,7 +270,7 @@ Obviously to go, every burglar needs himself to go, hence every node (if one see
 Aside from that, burglars `jack` and `averall` need some buddies, hence they also have as parents the nodes which capture whether their buddies are going.
 
 #### They will only go out stealing if 2 or more are going
-To capture this with our bayesian network approach, we enumerated all possible combinations of burglars going. It's similar to a noisy OR, but with a necessity of 2 truthy parents instead of 1.
+To capture this with our Bayesian network approach, we enumerated all possible combinations of burglars going. It's similar to a noisy OR, but with a necessity of 2 truthy parents instead of 1.
 For each, we determined specified whether enough were going.
 
 ```
@@ -327,7 +327,7 @@ Both clubs are Spanish, could it be that Spanish football clubs logos often shar
 The goal is to represent these features in such a way that we can observe certain features of the logo, and ask what the most likely country is.
 
 ### Modelled data
-The dataset we used was the [top 50 UEFA ranked footbal clubs list](http://www.uefa.com/memberassociations/uefarankings/club/).
+The dataset we used was the [top 50 UEFA ranked football clubs list](http://www.uefa.com/memberassociations/uefarankings/club/).
 
 #### Logo features
 
@@ -355,7 +355,7 @@ prob letter: 0.10.
 prob animal: 0.10.
 prob stripe: 0.10.
 ```
-Here some modelling decisions had to be made. What is the likelihood of a circle without observing it?
+Here some modeling decisions had to be made. What is the likelihood of a circle without observing it?
 We decided to use 10% for every feature, so an assumption is made that all of these features are 'missed' as often as others, and are as defining as others.
 
 
