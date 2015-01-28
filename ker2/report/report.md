@@ -132,8 +132,8 @@ f3 (I1, Earthquake) =
 
 f4 (I2, Burglar) =
 (I2, Burglar) 0.95
-(I2, Burglar) 0.0
-(¬I2, ¬Burglar) 0.05
+(I2, ¬Burglar) 0.0
+(¬I2, Burglar) 0.05
 (¬I2, ¬Burglar) 1.0
 
 f5 (Alarm, I1, I2) =
