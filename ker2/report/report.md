@@ -118,34 +118,35 @@ In this case, following from the output, it's
 
 ```
 f1 (Earthquake) =
-[Earthquake T] 0.02738
-[Earthquake F] 0.97262
+(Earthquake) 0.02738
+(¬Earthquake) 0.97262
 
 f2 (Burglar) =
-[Burglar T] 0.02738
-[Burglar F] 0.97262
+(Burglar) 0.02738
+(¬Burglar) 0.97262
 
 f3 (I1, Earthquake) =  
-[I1 T, Earthquake T] 0.2
-[I1 T, Earthquake F] 0.0
-[I1 F, Earthquake T] 0.8
-[I1 F, Earthquake F] 1.0
+(I1, Earthquake) 0.2
+(I1, ¬Earthquake) 0.0
+(¬I1, Earthquake) 0.8
+(¬I1, ¬Earthquake) 1.0
 
 f4 (I2, Burglar) =
-[I2 T, Burglar T] 0.95
-[I2 T, Burglar F] 0.0
-[I2 F, Burglar T] 0.05
-[I2 F, Burglar F] 1.0
+(I2, Burglar) 0.95
+(I2, Burglar) 0.0
+(¬I2, ¬Burglar) 0.05
+(¬I2, ¬Burglar) 1.0
 
 f5 (Alarm, I1, I2) =
-[Alarm T, I1 T, I2 T] 1.0
-[Alarm T, I1 T, I2 F] 1.0
-[Alarm T, I1 F, I2 T] 1.0
-[Alarm T, I1 F, I2 F] 0.0
-[Alarm F, I1 T, I2 T] 0.0
-[Alarm F, I1 T, I2 F] 0.0
-[Alarm F, I1 F, I2 T] 0.0
-[Alarm F, I1 F, I2 F] 1.0
+(Alarm, I1, I2) 1.0
+(Alarm, I1, ¬I2) 1.0
+(Alarm, ¬I1, I2) 1.0
+(Alarm, ¬I1, ¬I2) 0.0
+(¬Alarm, I1, I2) 0.0
+(¬Alarm, I1, ¬I2) 0.0
+(¬Alarm, ¬I1, I2) 0.0
+(¬Alarm, ¬I1, ¬I2) 1.0
+
 ```
 
 Elimination order:
@@ -209,6 +210,7 @@ That's better, this matches AILog's calculations! I expected a difference due to
 
 ### Comparison to AILog's approach
 
+An AILog program contains facts and constraints in first order logic. Hypotheses are represented as a set of assumables. The logic formula are converted to horn clauses and then SLD resolution is used to derive the goal clauses.
 Variable elimination involves "removing" nodes one by one, until only the question node remains.
 This has upsides downsides as it introduces a form of bookkeeping (factors). These factors are used to prevent dual calculations, which can occur in *AILog*'s approach. This is a form of dynamic programming (keeping track of what you have calculated).
 Because of this bookkeeping additional memory is required for the computation, and the order in which the variables are eliminated can influence the amount of operations necessary. So, finding a (sub-)optimal order may take even more computation than it saves!
@@ -380,7 +382,7 @@ steaua <- stripe.
 steaua <- letter.
 ```
 This was however the wrong approach, as a feature consists of all of these features, and the absence of other features.
-It is a more *constraint-based* problem.
+It is more of a *constraint-based*/*constraint-satisfaction* problem.
 
 Here is what we settled for, we define the constraints per logo.
 ```
@@ -399,7 +401,6 @@ ger <- bayernmunchen ; schalke ; dortmund ; leverkusen ; hannover.
 eng <- chelsea ; arsenal; united; manchestercity; tottenham; liverpool.
 ... (13 more countries)
 ```
-
 Unfortunately, AILog does not support the `;` operator for *or* constructs, so a clause had to be made for every club as such:
 
 ```
@@ -456,7 +457,12 @@ any <- ispor.
 
 ### Style of reasoning
 
-TODO: Style of reasoning, considerations.
+The main style of reasoning here is deductive reasoning because we felt it was more suitable for this domain.
+We are reasoning from cause to 'effect'.
+It seems more useful to observe a logo of a football club and extract some features of the logo.
+Then we can use these features to reason about which club or what country etc. the club belongs to than the other way around.
+
+Although, the model can be used in either direction.
 
 ### Queries and results
 
