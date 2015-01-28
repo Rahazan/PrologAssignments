@@ -306,7 +306,7 @@ prob myHouse: 3/10000.
 
 We could describe what it looks like, but I think an illustration would work better.
 
-![Burglars Bayesian Network](https://raw.githubusercontent.com/Rahazan/PrologAssignments/master/ker2/report/burglars.png.png)
+![Burglars Bayesian Network](https://raw.githubusercontent.com/Rahazan/PrologAssignments/master/ker2/report/burglars.png)
 
 This network represents the knowledge. An advantage to this approach is that it is easy to see the dependencies and how it influences the probabilities 'down the chain'.
 A disadvantage is the rigidness (hardcoded-ness). Adding another burglar would involve making changes in multiple places.
@@ -320,7 +320,7 @@ These logos have some interesting features that you see in many other logos as w
 
 Here are two examples:
 <center>
-<img src="atletico.png" alt="Atletico" style="height: 280px;"/>   <img src="barcelona.png" alt="Barcelona" style="height: 280px;"/>
+<img src="https://raw.githubusercontent.com/Rahazan/PrologAssignments/master/ker2/report/atletico.png" alt="Atletico" style="height: 280px;"/>   <img src="https://raw.githubusercontent.com/Rahazan/PrologAssignments/master/ker2/report/barcelona.png" alt="Barcelona" style="height: 280px;"/>
 </center>
 
 These are the logos of *Club Atlético de Madrid* and *FC Barcelona*.
@@ -373,7 +373,7 @@ club <- observation2 of logo.
 
 An example, the logo of *Steaua*:
 
-![Steaua](steaua.png)
+![Steaua](https://raw.githubusercontent.com/Rahazan/PrologAssignments/master/ker2/report/steaua.png)
 
 Representation in *AILog*:
 ```
