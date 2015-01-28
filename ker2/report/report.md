@@ -10,7 +10,7 @@ January 2015
 
 2 . We do not know the probabilities of the alarm going off given both earthquake and burglar, so we decided to add intermediate nodes and a noisy OR function for the alarm node (we assume causal independence).
 
-![Network](network.png)
+![Network](https://raw.githubusercontent.com/Rahazan/PrologAssignments/master/ker2/report/network.png)
 
 
 3 . We added the corresponding conditional probability tables in the same image, next to the nodes of the Bayesian network.
@@ -306,7 +306,7 @@ prob myHouse: 3/10000.
 
 We could describe what it looks like, but I think an illustration would work better.
 
-![Burglars Bayesian Network](burglars.png)
+![Burglars Bayesian Network](https://raw.githubusercontent.com/Rahazan/PrologAssignments/master/ker2/report/burglars.png.png)
 
 This network represents the knowledge. An advantage to this approach is that it is easy to see the dependencies and how it influences the probabilities 'down the chain'.
 A disadvantage is the rigidness (hardcoded-ness). Adding another burglar would involve making changes in multiple places.
